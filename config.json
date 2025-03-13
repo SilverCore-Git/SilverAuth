@@ -1,0 +1,10 @@
+{
+
+    "db": {
+
+        "DefaultFile": "db/default_database.json",
+        "KeyFile": "db/key_database.json"
+
+    }
+
+}
