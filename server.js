@@ -14,6 +14,10 @@ const express = require("express");
 const http = require("http");
 
 
+// importation de la class compte
+const account = require('./src/database/account.js');
+
+account.create('test@test.test', 'caca', 'monpasswd', accountGrade = 'USER', dataplus = null)
 
 // importation des roots
 const root_api = require('./roots/api.js');
@@ -27,9 +31,9 @@ const roots = {
 }
 
 // gestion des databases
-const db = require('./src/db.js')
+const connection = require('./src/database/database.js');
 
-db.query('SELECT 1 + 1 AS test', (err, results) => {
+connection.query('SELECT 1 + 1 AS test', (err, results) => {
     if (err) {
         console.error('❌ Erreur de requête test:', err);
         return;

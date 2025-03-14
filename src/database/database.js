@@ -10,7 +10,7 @@ const mariadb = require('mariadb');
 require('dotenv').config();
 
 
-const db = mariadb.createPool({
+const connection = mariadb.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWD,
@@ -20,7 +20,7 @@ const db = mariadb.createPool({
     idleTimeout: 5000 
 });
 
-db.getConnection()
+connection.getConnection()
     .then(conn => {
         console.log('✅ Connecté à MariaDB avec succès !');
         conn.release();
@@ -29,5 +29,10 @@ db.getConnection()
         console.error('❌ Erreur de connexion à MariaDB:', err.message);
     });
 
-module.exports = db;
+
+
+
+
+
+module.exports = connection;
 
