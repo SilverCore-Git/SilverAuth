@@ -10,7 +10,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "http": "^0.0.1-security"
+    "http": "^0.0.1-security",
+    "mariadb": "^3.4.0",
+    "mongoose": "^8.12.1",
+    "mysql2": "^3.13.0"
   }
 }
