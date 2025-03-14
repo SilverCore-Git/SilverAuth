@@ -4,23 +4,23 @@
  * @author MisterPapaye
  */
 
+const { error } = require('console');
 const connection = require('./database.js');
 
 class Account {
 
-    /**
-     * Crée un compte dans la base de données
-     * @param {string} email - L'email de l'utilisateur
-     * @param {string} pseudo - Le pseudo de l'utilisateur
-     * @param {string} password - Le mot de passe (en texte brut)
-     * @param {string} accountGrade - Le grade de l'utilisateur (par défaut 'USER')
-     * @param {Object} dataplus - Des informations supplémentaires en format JSON
-     * @returns {Promise<Object>} - Résultat de l'opération d'insertion
-     */
-    async create(email, pseudo, password, accountGrade = 'USER', dataplus = null) {
+
+    async create(
+        email, 
+        pseudo, 
+        password, 
+        accountGrade = 'USER', 
+        dataplus = null
+    ) {
 
         let conn;
         try {
+
             // Connexion à la base de données
             conn = await connection.getConnection();
 
@@ -33,15 +33,76 @@ class Account {
                 [email, pseudo, hashedPassword, accountGrade, JSON.stringify(dataplus)]
             );
 
-            console.log('✅ Compte créé avec succès !');
             return result;
 
         } catch (err) {
+
             console.error('❌ Erreur lors de la création du compte:', err.message || err);
-            throw new Error('Erreur lors de la création du compte. Veuillez réessayer.');
+            return { error: true, message: err.message || err };
 
         } finally {
-            // Libération de la connexion
+            if (conn) conn.release();
+        }
+    }
+
+
+    async info(email) {
+
+        let conn;
+        try {
+
+            // Connexion à la base de données
+            conn = await connection.getConnection();
+
+            // Requête pour récupérer les informations du compte par email
+            const [rows] = await conn.query(
+                'SELECT * FROM account WHERE email = ?',
+                [email]
+            );
+
+            if (rows.length === 0) {
+                return { error: true, message: 'Aucun compte trouvé avec cet email.' };
+            }
+
+            console.log(`✅ Informations du compte pour l'email ${email}:`, rows[0]);
+            return { message: 'Informations récupérées avec succès.', data: rows[0] };
+
+        } catch (err) {
+            console.error('❌ Erreur lors de la récupération des informations du compte:', err.message || err);
+            return { error: true, message: err.message || err };
+        } finally {
+            if (conn) conn.release();
+        }
+    }
+
+    /**
+     * Supprime un compte en utilisant l'email
+     * @param {string} email - Email du compte à supprimer
+     * @returns {Promise<Object>} - Résultat de la suppression
+     */
+    async deleteByEmail(email) {
+        let conn;
+        try {
+            // Connexion à la base de données
+            conn = await connection.getConnection();
+
+            // Requête pour supprimer le compte par email
+            const result = await conn.query(
+                'DELETE FROM account WHERE email = ?',
+                [email]
+            );
+
+            if (result.affectedRows === 0) {
+                throw new Error('Aucun compte trouvé avec cet email pour supprimer.');
+            }
+
+            console.log(`✅ Compte avec l'email ${email} supprimé avec succès.`);
+            return { message: 'Compte supprimé avec succès.' };
+
+        } catch (err) {
+            console.error('❌ Erreur lors de la suppression du compte:', err.message || err);
+            return { error: true, message: err.message || err };
+        } finally {
             if (conn) conn.release();
         }
     }

@@ -14,10 +14,13 @@ const express = require("express");
 const http = require("http");
 
 
-// importation de la class compte
-const account = require('./src/database/account.js');
 
-account.create('test@test.test', 'caca', 'monpasswd', accountGrade = 'USER', dataplus = null)
+const account = require('./src/database/account.js');
+const apikey = require('./src/database/apikey.js');
+const { createToken } = require('./src/token.js');
+
+
+
 
 // importation des roots
 const root_api = require('./roots/api.js');
@@ -29,6 +32,7 @@ const roots = {
     "popup": root_popup
 
 }
+
 
 // gestion des databases
 const connection = require('./src/database/database.js');
