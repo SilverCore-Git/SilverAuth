@@ -54,6 +54,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.use('/api', roots.api);
+app.use('/popup', roots.popup);
 
 
 console.log("Server express démarer !");

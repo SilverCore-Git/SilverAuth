@@ -26,7 +26,7 @@ db.getConnection()
         conn.release();
     })
     .catch(err => {
-        console.error('❌ Erreur de connexion à MariaDB:', err);
+        console.error('❌ Erreur de connexion à MariaDB:', err.message);
     });
 
 module.exports = db;
