@@ -15,12 +15,6 @@ const http = require("http");
 
 
 
-const account = require('./src/database/account.js');
-const apikey = require('./src/database/apikey.js');
-const { createToken } = require('./src/token.js');
-
-
-
 
 // importation des roots
 const root_api = require('./roots/api.js');
@@ -71,16 +65,6 @@ app.use('/dev', roots.dev);
 
 
 console.log("Server express démarer !");
-
-
-const AccountConnect = require('./src/auth/connect.js');
-
-async function d() {
-    const result = await AccountConnect('t@t.t', 'tt');
-    return result
-}
-
-d().then(console.log);
 
 
 
