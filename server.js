@@ -12,6 +12,7 @@ console.log('Démarrage du serveur...');
 // Importation des bibliothèques
 const express = require("express");
 const http = require("http");
+const ejs = require("ejs");
 const cookieParser = require('cookie-parser');
 
 
@@ -35,6 +36,7 @@ const roots = {
 
 // gestion des databases
 const connection = require('./src/database/database.js');
+const path = require("path");
 
 connection.query('SELECT 1 + 1 AS test', (err, results) => {
     if (err) {
@@ -75,9 +77,20 @@ app.use('/popup', roots.popup);
 app.use('/dev', roots.dev);
 
 
+app.get('/assets/:dir/:file', (req, res) => {
+
+    const dir = req.params.dir;
+    const file = req.params.file;
+    const ext = req.query.ext;
+
+    res.sendFile(path.join( __dirname, 'assets', dir, `${file}.${ext}` ))
+
+});
 
 
-
+app.get('/test', (req, res) => {
+    res.render('login')
+})
 
 const PORT = 8456;
 http.createServer(app).listen(PORT, () => {
