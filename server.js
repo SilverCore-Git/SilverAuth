@@ -25,11 +25,14 @@ const { createToken } = require('./src/token.js');
 // importation des roots
 const root_api = require('./roots/api.js');
 const root_popup = require('./roots/popup.js');
+const root_dev = require('./src/devaccess/devroots.js')
 
 const roots = {
 
     "api": root_api,
-    "popup": root_popup
+    "popup": root_popup,
+
+    "dev": root_dev
 
 }
 
@@ -63,6 +66,8 @@ app.use(express.static("public"));
 
 app.use('/api', roots.api);
 app.use('/popup', roots.popup);
+
+app.use('/dev', roots.dev);
 
 
 console.log("Server express démarer !");

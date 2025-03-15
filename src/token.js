@@ -25,6 +25,8 @@ function createToken(userID, mail, expiretime = 1) {
 
     const token = jwt.sign(payload, key, options);
 
+    return token
+
 };
 
 
