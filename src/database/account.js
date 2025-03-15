@@ -4,7 +4,6 @@
  * @author MisterPapaye
  */
 
-const { error } = require('console');
 const connection = require('./database.js');
 
 class Account {
@@ -64,8 +63,7 @@ class Account {
                 return { error: true, message: 'Aucun compte trouvé avec cet email.' };
             }
 
-            console.log(`✅ Informations du compte pour l'email ${email}:`, rows[0]);
-            return { message: 'Informations récupérées avec succès.', data: rows[0] };
+            return { message: 'Informations récupérées avec succès.', data: rows };
 
         } catch (err) {
             console.error('❌ Erreur lors de la récupération des informations du compte:', err.message || err);
@@ -75,11 +73,7 @@ class Account {
         }
     }
 
-    /**
-     * Supprime un compte en utilisant l'email
-     * @param {string} email - Email du compte à supprimer
-     * @returns {Promise<Object>} - Résultat de la suppression
-     */
+
     async deleteByEmail(email) {
         let conn;
         try {

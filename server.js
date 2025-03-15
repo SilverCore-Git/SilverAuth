@@ -73,7 +73,14 @@ app.use('/dev', roots.dev);
 console.log("Server express démarer !");
 
 
+const AccountConnect = require('./src/auth/connect.js');
 
+async function d() {
+    const result = await AccountConnect('t@t.t', 'tt');
+    return result
+}
+
+d().then(console.log);
 
 
 

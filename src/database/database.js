@@ -15,7 +15,7 @@ const connection = mariadb.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWD,
     database: process.env.DB_DATABASE,
-    connectionLimit: 50,
+    connectionLimit: 100,
     acquireTimeout: 10000, 
     idleTimeout: 5000 
 });
