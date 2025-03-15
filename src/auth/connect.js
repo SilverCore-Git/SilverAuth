@@ -9,7 +9,7 @@ const account = require('../database/account.js');
 const { createToken } = require('../token.js');
 
 
-module.exports = async function AccountConnect(mail, passwd) {
+module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
 
     const hashedPassword = require('crypto').createHash('sha256').update(passwd).digest('hex');
 
@@ -33,7 +33,7 @@ module.exports = async function AccountConnect(mail, passwd) {
 
             const token = await createToken(res.data.id, res.data.pseudo, res.data.email, res.data.dataplus)
 
-            return { message: 'Connexion réussie !', token: token };
+            return { message: 'Connexion réussie !', token: token, expiretime: expiretime };
         }
 
         return { error: true, message: 'Mot de passe incorrect !' };

@@ -6,15 +6,16 @@
 
 
 const jwt = require('jsonwebtoken');
-const connection = require('./database/database.js');
 require('dotenv').config();
 
 var key = process.env.TOKEN_SECRET_KEY;
 
 
-async function createToken(userID, name, mail, dataplus, expiretime = 1) {
+
+async function createToken(userID, name, mail, dataplus, expiretime = 24) {
 
     const payload = {
+        expiretime: expiretime,
         usr_info: {
             userId: userID,
             name: name,
@@ -40,11 +41,11 @@ async function verifyToken(token) {
 
         const decoded = await jwt.verify(token, key);
 
-        return { valid: true, data: decoded };
+        return { valid: true, token: token, data: decoded };
 
     } catch (error) {
 
-        return { valid: false, message: 'Token invalide ou expiré' };
+        return { error: true, valid: false, message: 'Token invalide ou expiré' };
 
     }
 

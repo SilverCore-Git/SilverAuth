@@ -12,6 +12,7 @@ console.log('Démarrage du serveur...');
 // Importation des bibliothèques
 const express = require("express");
 const http = require("http");
+const cookieParser = require('cookie-parser');
 
 
 
@@ -20,11 +21,13 @@ const http = require("http");
 const root_api = require('./roots/api.js');
 const root_popup = require('./roots/popup.js');
 const root_dev = require('./src/devaccess/devroots.js')
+const root_auth = require('./roots/auth.js')
 
 const roots = {
 
     "api": root_api,
     "popup": root_popup,
+    "auth": root_auth,
 
     "dev": root_dev
 
@@ -54,17 +57,24 @@ connection.query('SELECT 1 + 1 AS test', (err, results) => {
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
+
+
+console.log("Server express démarer !");
+
+
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
+
 app.use('/api', roots.api);
+app.use('/auth', roots.auth);
 app.use('/popup', roots.popup);
 
 app.use('/dev', roots.dev);
 
 
-console.log("Server express démarer !");
 
 
 

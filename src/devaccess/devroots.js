@@ -13,7 +13,6 @@
  const account = require('../database/account.js');
 
  
- //   gestion des clé d'api
  
  router.get('/token', (req, res) => {
  
