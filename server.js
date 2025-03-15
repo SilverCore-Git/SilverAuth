@@ -16,7 +16,6 @@ const cookieParser = require('cookie-parser');
 
 
 
-
 // importation des roots
 const root_api = require('./roots/api.js');
 const root_popup = require('./roots/popup.js');
@@ -68,13 +67,12 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 
+// roots
 app.use('/api', roots.api);
 app.use('/auth', roots.auth);
 app.use('/popup', roots.popup);
 
 app.use('/dev', roots.dev);
-
-
 
 
 

@@ -5,7 +5,6 @@
  */
 
 
-const { error } = require('console');
 const connection = require('./database.js');
 const crypto = require('crypto');
 
@@ -20,11 +19,11 @@ class APIKeyManager {
 
             accountId, 
             organizationName, 
-            dailyRequestLimit = 1000, 
             allowedDomains = null, 
-            redirectUrls = null, 
+            redirectUrls = null,
+            expiresAt = null, 
             dataplus = null, 
-            expiresAt = null
+            dailyRequestLimit = 1000
 
     ) {
 
@@ -68,7 +67,7 @@ class APIKeyManager {
             );
 
             console.log('✅ Clé API créés avec succès !');
-            return { apiKey, resultApiKey };
+            return { key: apiKey, data: resultApiKey };
 
         } catch (err) {
 

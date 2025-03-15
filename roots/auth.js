@@ -28,12 +28,14 @@ router.get('/register', async (req, res) => {
     const mail = req.query.mail;
     const name = req.query.name;
     const passwd = req.query.passwd;
+    const dataplus = req.body;
     const ip = req.ip || req.connection.remoteAddress;
+    
 
 
     try {
 
-        await account.create(mail, name, passwd, 'USER', { ip: ip })
+        await account.create(mail, name, passwd, 'USER', { ip: ip, plus: dataplus})
 
         .then(resp => {
 
@@ -48,8 +50,16 @@ router.get('/register', async (req, res) => {
                 return value;
 
             }));
-                
-            res.status(200).json({ statu: 'success', resp: sanitizedResp });
+            
+            if (sanitizedResp.error) {
+
+                res.status(401).json({ statu: 'error', resp: sanitizedResp });
+
+            } else {
+
+                res.status(200).json({ statu: 'success', resp: sanitizedResp });
+
+            }
 
         })
 
