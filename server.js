@@ -20,8 +20,8 @@ const cookieParser = require('cookie-parser');
 // importation des roots
 const root_api = require('./roots/api.js');
 const root_popup = require('./roots/popup.js');
-const root_dev = require('./src/devaccess/devroots.js')
-const root_auth = require('./roots/auth.js')
+const root_dev = require('./src/devaccess/devroots.js');
+const root_auth = require('./roots/auth.js');
 
 const roots = {
 
@@ -31,7 +31,7 @@ const roots = {
 
     "dev": root_dev
 
-}
+};
 
 
 // gestion des databases
@@ -76,6 +76,11 @@ app.use('/popup', roots.popup);
 
 app.use('/dev', roots.dev);
 
+app.get('/favicon.ico', (req, res) => {
+
+    res.sendFile( path.join( __dirname, 'assets', 'favicon.ico' ) )
+
+});
 
 app.get('/assets/:dir/:file', (req, res) => {
 

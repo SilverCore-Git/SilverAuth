@@ -1,3 +1,10 @@
+<!-- /**
+ * @author SilverCore
+ * @author SilverAuth
+ * @author MisterPapaye
+*/ -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +12,11 @@
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <link rel="stylesheet" href="/assets/css/login?ext=css">
+        <link rel="stylesheet" href="/assets/css/loader?ext=css">
+        <script src="/assets/js/login?ext=js" type="module" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -16,14 +27,13 @@
     <body>
         
 
-        <section class="container">
+        <section class="container" style="display: flex; flex-direction: column;">
 
+            <div class="title">
+                <img src="https://api.silverdium.fr/img/auth/logo.png"><h1>SilverAuth</h1> 
+            </div>
 
-            <div class="cardForm">
-
-                <div class="title">
-                    <img src="https://api.silverdium.fr/img/auth/logo.png"><h1>SilverAuth</h1> 
-                </div>
+            <div class="cardForm" style="display: none;">
 
                 <form id="conect">
 
@@ -87,8 +97,15 @@
 
             </div>
 
+            <div id="loader" style="margin-top: 3.5rem;">
+ 
+                <div class="loader"></div>
+
+            </div>
+
 
         </section>
+
 
 
     </body>
