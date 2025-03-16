@@ -22,12 +22,17 @@ const root_api = require('./roots/api.js');
 const root_popup = require('./roots/popup.js');
 const root_dev = require('./src/devaccess/devroots.js');
 const root_auth = require('./roots/auth.js');
+const root_user = require('./roots/user.js');
+const root_panel = require('./roots/panel.js');
+
 
 const roots = {
 
     "api": root_api,
     "popup": root_popup,
     "auth": root_auth,
+    "user": root_user,
+    "panel": root_panel,
 
     "dev": root_dev
 
@@ -73,8 +78,12 @@ app.use(express.static("public"));
 app.use('/api', roots.api);
 app.use('/auth', roots.auth);
 app.use('/popup', roots.popup);
+app.use('/user', roots.user);
+app.use('/panel', roots.panel);
 
 app.use('/dev', roots.dev);
+
+
 
 app.get('/favicon.ico', (req, res) => {
 

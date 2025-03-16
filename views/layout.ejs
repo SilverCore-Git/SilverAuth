@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <!-- AdminLTE CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/css/adminlte.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-widget="pushmenu" role="button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="/panel" class="brand-link">
+            <span class="brand-text font-weight-light">Admin Panel</span>
+        </a>
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                    <li class="nav-item">
+                        <a href="/panel" class="nav-link">
+                            <i class="nav-icon fa fa-dashboard"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/panel/users" class="nav-link">
+                            <i class="nav-icon fa fa-users"></i>
+                            <p>Gestion des utilisateurs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/panel/api-management" class="nav-link">
+                            <i class="nav-icon fa fa-key"></i>
+                            <p>Gestion de la clé API</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/panel/settings" class="nav-link">
+                            <i class="nav-icon fa fa-cogs"></i>
+                            <p>Paramètres</p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="container-fluid">
+            <!-- Ici, le contenu de chaque page sera rendu -->
+            <%- body %> <!-- Cette ligne est l'endroit où le contenu de chaque page sera injecté -->
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/js/adminlte.min.js"></script>
+</body>
+</html>
