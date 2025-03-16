@@ -17,12 +17,26 @@ const router = express.Router();
 // ex d'utilisation :
 router.get('/auth', async (req, res) => { 
 
-    // const key = req.headers['APIKey']    // recupération de la clé d'api stocké dans le head de la raquete
-    const key = req.query.key
+    const key = req.query.key;
     const action = req.query.action         // ?action= peut être login register...
     const redirect = req.query.redirect     // ?redirect= est l'url vers laquelle l'utilisateur va être rediriger
 
+
     const client = await apikey.verify(key);
+
+    const allowed_domains = client.data.data.allowed_domains;
+    const allowed_redirect = client.data.data.redirect_urls;
+
+    if (!allowed_domains.includes(req.hostname)) {
+        res.status(400).json({ error: true, message: 'Nom de domaine non lié a l\'api key !' });
+        return
+    }
+
+
+    if (!allowed_redirect.includes(redirect)) {
+        res.status(400).json({ error: true, message: 'Url de redirection non lié a l\'api key !' });
+        return
+    }
 
 
     if (!client.valid) {

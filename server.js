@@ -85,6 +85,10 @@ app.use('/dev', roots.dev);
 
 
 
+app.get('/example/site', (req, res) => {
+    res.sendFile(path.join( __dirname, 'public', 'example_site', `index.html` ));
+});
+
 app.get('/favicon.ico', (req, res) => {
 
     res.sendFile( path.join( __dirname, 'assets', 'favicon.ico' ) )
@@ -104,7 +108,7 @@ app.get('/assets/:dir/:file', (req, res) => {
 // const apikey = require('./src/database/apikey.js');
 
 // async function d() {
-//     await apikey.create(4, 'cacacorp').then(resp => { console.log(resp) })
+//     await apikey.create(4, 'olalacorp', [ "localhost", 'moi.com' ], [ "/example/site" ]).then(resp => { console.log(resp) })
 // }
 // d()
  

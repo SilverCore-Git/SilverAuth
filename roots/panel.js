@@ -32,8 +32,8 @@ router.get('/', (req, res) => {
     res.render('panel/users');
   });
   
-  router.get('/api-management', (req, res) => {
-    res.render('panel/api-management');
+  router.get('/apikey', (req, res) => {
+    res.render('panel/apikey');
   });
   
   router.get('/settings', (req, res) => {

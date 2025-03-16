@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue sur Example Site</h1>
+        <button onclick="login()">Connexion</button>
+        <button>Inscription</button>
+    </div>
+    <script>
+ 
+        function login() {
+
+            const key = '0250e40eb1ee33c23bb3cf76f0f7255f229de29bb50c323a0f279c1800ba9134';
+            window.location.href = `/popup/auth?action=login&redirect=/example/site&key=${key}`;
+
+        }
+
+    </script>
+</body>
+</html>

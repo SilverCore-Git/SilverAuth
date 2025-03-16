@@ -21,9 +21,9 @@ class APIKeyManager {
             organizationName, 
             allowedDomains = null, 
             redirectUrls = null,
-            expiresAt = null, 
             dataplus = null, 
-            dailyRequestLimit = 1000
+            dailyRequestLimit = 1000,
+            expiresAt = null
 
     ) {
 
