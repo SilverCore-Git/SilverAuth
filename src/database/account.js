@@ -63,10 +63,6 @@ class Account {
                 [email]
             );
 
-            if (rows.length === 0) {
-                return { error: true, message: 'Aucun compte trouvé avec cet email.' };
-            }
-
             return { message: 'Informations récupérées avec succès.', data: rows };
 
         } catch (err) {

@@ -81,26 +81,32 @@ router.get('/register', async (req, res) => {
 });
 
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
 
-    const mail = req.query.mail;
-    const passwd = req.query.passwd;
+    const { mail, passwd } = req.body;
 
 
     try {
-
+ 
         await AccountConnect(mail, passwd).then(resp => {
+
+            if (resp.error) {
+                
+                res.status(200).json( { statu: 'error', data: resp } );
+                return
+
+            }
 
             res.cookie('silvertoken', resp.token, {
 
                 httpOnly: true,
                 secure: true,
-                maxAge: resp.expiretime * 60 * 60 * 1000, 
-                sameSite: 'Strict',
+                maxAge: 24 * 60 * 60 * 1000, 
+                sameSite: 'Strict'
         
             });
 
-            res.status(200).json( { statu: 'success', resp } );
+            res.status(200).json( { statu: 'success', data: resp } );
 
         });
 
@@ -108,7 +114,7 @@ router.get('/login', async (req, res) => {
 
     catch (err) {
 
-        res.status(500).json( { error: true, massage: { silver: 'Une erreur est survenue !', server: err || err.message } } );
+        res.status(500).json( { error: true, massage: { silver: 'Une erreur est survenue !', server: err.message || err } } );
 
     };
 

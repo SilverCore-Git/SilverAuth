@@ -4,43 +4,35 @@
  * @author MisterPapaye
  */
 
-
-const crypto = require('crypto');
-
-
+const APIKey = require('./database/apikey.js');
 
 class APIKeyManager {
-
+    
     constructor() {}
 
-    generateAPIKey() {
+    async verify(apiKey) {
 
-        const apiKey = crypto.randomBytes(32).toString('hex');
-        const createdAt = new Date();
-        this.apiKeys.set(apiKey, { createdAt, revoked: false });
-        return apiKey;
-        
-    }
+        try {
 
-    isAPIKeyValid(apiKey) {
-        const keyData = this.apiKeys.get(apiKey);
-        if (!keyData || keyData.revoked) {
-        return false;
+            const resp = await APIKey.info(apiKey);
+
+            if (resp.statu === 'success') {
+                return { valid: true, data: resp };
+            }
+
+            if (resp.error) {
+                return { error: true, message: resp.message }; 
+            }
+
+            return { valid: false, message: 'Key non valide', data: resp };
+
+        } catch (err) {
+
+            return { error: true, message: err.message || err };
+
         }
-        return true;
-    }
 
-    revokeAPIKey(apiKey) {
-        const keyData = this.apiKeys.get(apiKey);
-        if (!keyData) {
-        return false;
-        }
-        keyData.revoked = true;
-        return true;
     }
-
-    getAPIKeyInfo(apiKey) {
-        return this.apiKeys.get(apiKey) || null;
-    }
-
 }
+
+module.exports = new APIKeyManager();

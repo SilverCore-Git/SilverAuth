@@ -37,10 +37,13 @@ class APIKeyManager {
 
 
             if (!expiresAt) {
-                const date = new Date();
-                date.setFullYear(date.getFullYear() + 1); // Ajouter un an
-                expiresAt = date.toISOString();
+                expiresAt = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                    .toISOString()
+                    .slice(0, 19)
+                    .replace("T", " ");
             }
+            
+
 
             // Connexion à la base de données
             conn = await connection.getConnection();
@@ -135,7 +138,7 @@ class APIKeyManager {
                 return { error: true, message: 'Aucune clé API trouvée.' }
             }
 
-            return { statu: 'success', data: rows[0] };
+            return { statu: 'success', data: rows };
 
         } catch (err) {
 

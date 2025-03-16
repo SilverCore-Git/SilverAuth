@@ -15,7 +15,6 @@
 
         <link rel="stylesheet" href="/assets/css/login?ext=css">
         <link rel="stylesheet" href="/assets/css/loader?ext=css">
-        <script src="/assets/js/login?ext=js" type="module" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -41,7 +40,7 @@
 
                         <div class="inputsSpan">
 
-                            <span>Se connecter avec silver authenticator</span>
+                            <span>Se connecter a <%= organisationName %> avec silver authenticator</span>
                             <div class="inputs">
 
                                 <!-- From Uiverse.io by mrhyddenn --> 
@@ -109,5 +108,95 @@
 
 
     </body>
+
+
+
+    <script type="module">
+
+        import salert from 'https://corsproxy.io/https://api.silverdium.fr/salert/salert.js';
+
+        const redirect = '<%= redirect %>';
+
+        const mail = document.getElementById('mail');
+        const passwd = document.getElementById('passwd');
+        const form = document.querySelector('.cardForm');
+        const loader = document.getElementById('loader');
+        const btn = document.getElementById('login');
+
+        loader.style.display = 'none';
+        form.style.display= 'flex';
+
+        function connect(mail, passwd) {
+
+            setTimeout(() => {
+                loader.style.display = 'flex';
+                form.style.display= 'none';        
+            }, 300);
+
+            setTimeout( () => {
+
+                fetch(`/auth/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ mail, passwd }),
+                })
+                .then(res => res.json())
+                .then(resp => {
+
+                    if (resp.data.error) {
+
+                        if (resp.data.type === 405) {
+
+                            loader.style.display = 'none';
+                            form.style.display= 'flex';
+                            salert('SilverAuth', 'Email ou mot de pass incorect !', 'warning');
+
+                        } else {
+
+                            salert('SilverAuth', 'Une erreur est survenue !', 'error');
+
+                        }
+
+                    }
+
+                    else if (resp.statu === 'success') {
+
+                        setTimeout(() => {
+
+                            salert('SilverAuth', resp.data.message, 'success');
+                            
+                            setTimeout(() => {
+                                
+                                sessionStorage.setItem("userData", JSON.stringify({ token: resp.data.token }));
+                                window.location.href = redirect;
+
+                            }, 300);
+
+                        }, 500);
+
+                    }
+
+                });
+
+            }, 500);
+
+        };
+
+
+
+
+        btn.addEventListener('click', async (event) => {
+
+            event.preventDefault();
+
+            if (passwd.value == '' || mail.value == '') { salert('SilverAuth', `Il faut remplir tout les champs<br>non pas ceux du fermier.`); }
+            else { connect(mail.value, passwd.value) };
+
+        });
+
+    </script>
+
 
 </html>

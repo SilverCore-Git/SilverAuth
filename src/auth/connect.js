@@ -5,6 +5,7 @@
  */
 
 
+const { type } = require('os');
 const account = require('../database/account.js');
 const { createToken } = require('../token.js');
 
@@ -34,11 +35,16 @@ module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
             const token = await createToken(res.data.id, res.data.pseudo, res.data.email, res.data.dataplus)
 
             return { message: 'Connexion réussie !', token: token, expiretime: expiretime };
+
         }
 
-        return { error: true, message: 'Mot de passe incorrect !' };
+        else { 
+
+            return { error: true, type: 405, message: 'Mot de passe incorrect !' };
+
+        };
 
     } catch (err) {
-        return { error: true, message: err.message || err };
+        return { error: true, type: 405, message: 'invalid credential' };
     }
 };

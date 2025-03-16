@@ -92,6 +92,12 @@ app.get('/assets/:dir/:file', (req, res) => {
 
 });
 
+// const apikey = require('./src/database/apikey.js');
+
+// async function d() {
+//     await apikey.create(4, 'cacacorp').then(resp => { console.log(resp) })
+// }
+// d()
 
 app.get('/test', (req, res) => {
     res.render('login')
