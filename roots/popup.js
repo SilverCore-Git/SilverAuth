@@ -117,6 +117,14 @@ router.get('/getaccount/:id', (req, res) => {
 
     const data = getLineById(Sid);
 
+    res.cookie('silvertoken', data.token, {
+
+        httpOnly: true,
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000, 
+        sameSite: 'Strict'
+
+    });
     res.json(data);
 
 });

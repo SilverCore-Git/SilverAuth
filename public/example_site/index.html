@@ -37,21 +37,59 @@
         <h1>Bienvenue sur Example Site</h1>
         <button onclick="login()">Connexion</button>
         <button>Inscription</button>
+        <button onclick="logout()">Déconnexion</button>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <h1>Les information de ton compte</h1>
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Name =  <div id="name"></div></div>
+            <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Email =  <div id="email"></div></div>
+        </div>
     </div>
     <script>
  
         function login() {
 
-            const key = '0250e40eb1ee33c23bb3cf76f0f7255f229de29bb50c323a0f279c1800ba9134';
-            window.open(`/popup/auth?action=login&redirect=/example/site&key=${key}`, '_blank');
+            const key = '1f552321780ccd3134b1e84fe9c48b48e6f09be11d3b894a3159f7546c41a4b8';
+            window.location.href = `/popup/auth?action=login&redirect=/example/site/callback&key=${key}`;
 
-            setInterval(() => {
-                
-                fetch(`/popup/auth?action=verify&redirect=/example/site&key=${key}`)
+        };
 
-            }, 500);
+        function logout() {
+
+            fetch('/auth/logout')
+            .then(res => res.json())
+            .then(resp => {
+                if (resp) {
+                    data()
+                }
+            });
 
         }
+
+        function data() {
+            fetch('/auth/verify')
+            .then(resp => resp.json())
+            .then(resp => {
+
+                if (resp.valid) {
+
+                    document.getElementById('name').innerText = resp.data.usr_info.name;
+                    document.getElementById('email').innerText = resp.data.usr_info.email;
+
+                } else {
+
+                    document.getElementById('name').innerText = '';
+                    document.getElementById('email').innerText = '';
+
+                }
+
+
+            });
+        }
+        data()
 
     </script>
 </body>

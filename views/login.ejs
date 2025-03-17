@@ -169,7 +169,7 @@
                             
                             setTimeout(() => {
                                 
-                                fetch(`/popup/redirect?url=${redirect}`)
+                                window.location.href = `/popup/redirect?url=${redirect}`;
 
                             }, 300);
 

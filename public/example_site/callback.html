@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>callback</title>
+</head>
+<body>
+    
+    <script>
+
+        const url = window.location.href; 
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const id = urlParams.get('id');
+
+        fetch(`/getaccount/${id}`).then(res => {
+
+            window.location.href = '/example/site';
+
+        });
+
+    </script>
+
+</body>
+</html>
