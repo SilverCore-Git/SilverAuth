@@ -13,13 +13,14 @@ const { error } = require("console");
 const router = express.Router();
 
 
+var tempDatabase = [];
 
-// ex d'utilisation :
+
 router.get('/auth', async (req, res) => { 
 
     const key = req.query.key;
-    const action = req.query.action         // ?action= peut être login register...
-    const redirect = req.query.redirect     // ?redirect= est l'url vers laquelle l'utilisateur va être rediriger
+    const action = req.query.action;         // ?action= peut être login register...
+    const redirect = req.query.redirect;     // ?redirect= est l'url vers laquelle l'utilisateur va être rediriger
 
 
     const client = await apikey.verify(key);
@@ -59,6 +60,10 @@ router.get('/auth', async (req, res) => {
 
         }
 
+        else if (action === 'verify') {
+
+        }
+
         else {
 
             res.status(400).json({ error: true, message: 'Action non valide !' });
@@ -66,6 +71,53 @@ router.get('/auth', async (req, res) => {
         }
 
     };
+
+});
+
+
+
+router.get('/redirect', (req, res) => {
+
+    const url = req.query.url;     // ?url= est l'url vers laquelle l'utilisateur va être rediriger
+    const token = req.cookies.silvertoken;
+
+    if (!token) {
+
+        res.json({ error: true, message: 'Erreur lors de la récupération du token !' });
+        return
+
+    };
+
+    if (!url) {
+
+        res.json({ error: true, message: 'Erreur lors de la récupération de l\'url de redirection  !' });
+        return
+
+    };
+
+    const sessionID = Math.floor(Math.random() * 90000000000000000000) + 100000000000000000000;
+    tempDatabase.push( { id: sessionID, token: token } );
+
+    res.redirect(`${url}?id=${sessionID}`);
+
+});
+
+
+
+router.get('/getaccount/:id', (req, res) => {
+
+    const id = req.params.id;
+    const Sid = Number(id);
+
+
+    function getLineById(id) {
+        const result = tempDatabase.find(item => item.id === id);
+        return result ? result : null;
+    }
+
+    const data = getLineById(Sid);
+
+    res.json(data);
 
 });
 

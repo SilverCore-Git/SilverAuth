@@ -43,7 +43,13 @@
         function login() {
 
             const key = '0250e40eb1ee33c23bb3cf76f0f7255f229de29bb50c323a0f279c1800ba9134';
-            window.location.href = `/popup/auth?action=login&redirect=/example/site&key=${key}`;
+            window.open(`/popup/auth?action=login&redirect=/example/site&key=${key}`, '_blank');
+
+            setInterval(() => {
+                
+                fetch(`/popup/auth?action=verify&redirect=/example/site&key=${key}`)
+
+            }, 500);
 
         }
 

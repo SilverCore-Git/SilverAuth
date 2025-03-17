@@ -169,8 +169,7 @@
                             
                             setTimeout(() => {
                                 
-                                sessionStorage.setItem("userData", JSON.stringify({ token: resp.data.token }));
-                                window.location.href = redirect;
+                                fetch(`/popup/redirect?url=${redirect}`)
 
                             }, 300);
 
