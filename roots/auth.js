@@ -8,13 +8,12 @@
 // packages
 const express = require("express");
 const router = express.Router();
-const cookieParser = require('cookie-parser');
+const fs = require('fs')
 
 // require
 const { verifyToken } = require('../src/token.js');
 const AccountConnect = require('../src/auth/connect.js');
 const account = require('../src/database/account.js');
-const { TimeSeriesAggregationType } = require("redis");
 
 const cfg = require('../config.json')
 
@@ -36,8 +35,7 @@ router.get('/register', async (req, res) => {
     const passwd = req.query.passwd;
     const dataplus = req.body;
     const ip = req.ip || req.connection.remoteAddress;
-    
-    GetHeadbySkin('', '')
+
 
     try {
 
@@ -77,6 +75,25 @@ router.get('/register', async (req, res) => {
                 res.status(401).json({ statu: 'error', resp: sanitizedResp });
 
             } else {
+
+                async function createIMGAccountFile(name) {
+
+                    const defaultSkinURL = path.join( __dirname, '../data/skinapi/default/skin.png' );
+                    const defaultHeadURL = path.join( __dirname, '../data/skinapi/default/head.png' );
+                    const defaultPPURL = path.join( __dirname, '../data/pp/default.png' );
+
+                    const SkinURL = path.join( __dirname, `../data/skinapi/skin/${name}.png` );
+                    const HeadURL = path.join( __dirname, `../data/skinapi/head/${name}.png` );
+                    const PPURL = path.join( __dirname, `../data/pp/all/${name}.png` );
+
+                    fs.copyFileSync(defaultSkinURL, SkinURL);
+                    fs.copyFileSync(defaultHeadURL, HeadURL);
+                    fs.copyFileSync(defaultPPURL, PPURL);
+
+                }
+
+                createIMGAccountFile(name);
+
 
                 res.status(200).json({ statu: 'success', resp: sanitizedResp });
 
