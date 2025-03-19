@@ -5,7 +5,6 @@
  */
 
 
-
 console.log('Démarrage du serveur...');
 
 
@@ -24,11 +23,13 @@ const root_dev = require('./src/devaccess/devroots.js');
 const root_auth = require('./roots/auth.js');
 const root_user = require('./roots/user.js');
 const root_panel = require('./roots/panel.js');
+const root_skinapi = require('./roots/skinapi.js');
 
 
 const roots = {
 
     "api": root_api,
+    "skinapi": root_skinapi,
     "popup": root_popup,
     "auth": root_auth,
     "user": root_user,
@@ -76,6 +77,7 @@ app.use(express.static("public"));
 
 // roots
 app.use('/api', roots.api);
+app.use('/api/skin', roots.skinapi);
 app.use('/auth', roots.auth);
 app.use('/popup', roots.popup);
 app.use('/user', roots.user);

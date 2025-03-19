@@ -44,6 +44,7 @@
     <div class="container">
         <h1>Les information de ton compte</h1>
         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Statu =  <div id="statu"></div></div>
             <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Name =  <div id="name"></div></div>
             <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Email =  <div id="email"></div></div>
         </div>
@@ -78,11 +79,13 @@
 
                     document.getElementById('name').innerText = resp.data.usr_info.name;
                     document.getElementById('email').innerText = resp.data.usr_info.email;
+                    document.getElementById('statu').innerText = 'Connecté';
 
                 } else {
 
                     document.getElementById('name').innerText = '';
                     document.getElementById('email').innerText = '';
+                    document.getElementById('statu').innerText = 'Déconécté';
 
                 }
 

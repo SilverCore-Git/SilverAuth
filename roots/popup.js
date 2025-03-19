@@ -109,7 +109,6 @@ router.get('/getaccount/:id', (req, res) => {
     const id = req.params.id;
     const Sid = Number(id);
 
-
     function getLineById(id) {
         const result = tempDatabase.find(item => item.id === id);
         return result ? result : null;
@@ -117,17 +116,22 @@ router.get('/getaccount/:id', (req, res) => {
 
     const data = getLineById(Sid);
 
-    res.cookie('silvertoken', data.token, {
+    if (!data) {
+        return res.status(404).json({ error: 'Données non trouvées' });
+    }
 
+    res.cookie('silvertoken', data.token, {
         httpOnly: true,
         secure: true,
         maxAge: 24 * 60 * 60 * 1000, 
         sameSite: 'Strict'
-
     });
-    res.json(data);
 
+    tempDatabase = tempDatabase.filter(item => item.id !== Sid);
+
+    res.json(data);
 });
+
 
 
 

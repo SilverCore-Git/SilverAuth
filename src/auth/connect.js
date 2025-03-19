@@ -5,14 +5,17 @@
  */
 
 
-const { type } = require('os');
+
 const account = require('../database/account.js');
 const { createToken } = require('../token.js');
+
+require('dotenv').config();
+const AlgoHash = process.env.HASH_ALGO;
 
 
 module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
 
-    const hashedPassword = require('crypto').createHash('sha256').update(passwd).digest('hex');
+    const hashedPassword = require('crypto').createHash(AlgoHash).update(passwd).digest('hex');
 
     try {
 

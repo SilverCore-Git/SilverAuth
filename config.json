@@ -1,5 +1,7 @@
 {
 
+    "hostname": "https://auth.silverdium.fr",
+
     "db": {
 
         "DefaultFile": "db/default_database.json",

@@ -16,6 +16,12 @@ const AccountConnect = require('../src/auth/connect.js');
 const account = require('../src/database/account.js');
 const { TimeSeriesAggregationType } = require("redis");
 
+const cfg = require('../config.json')
+
+
+const skinurl = `${cfg.hostname}/api/skin/view/skin`;
+const headurl = `${cfg.hostname}/api/skin/view/head`;
+const defaultPPURL = `${cfg.hostname}/api/skin/view/pp`;
 
 
 router.get('/', (req, res) => {
@@ -31,11 +37,26 @@ router.get('/register', async (req, res) => {
     const dataplus = req.body;
     const ip = req.ip || req.connection.remoteAddress;
     
-
+    GetHeadbySkin('', '')
 
     try {
 
-        await account.create(mail, name, passwd, 'USER', { ip: ip, plus: dataplus})
+        await account.create(mail, name, passwd, 'USER', { 
+
+            ip: ip, 
+
+            skin: { 
+
+                skin: `${skinurl}/${name}`, 
+                head: `${headurl}/${name}` 
+
+            },
+
+            pp: `${defaultPPURL}/${name}`,
+
+            plus: dataplus
+
+        })
 
         .then(resp => {
 
@@ -101,7 +122,7 @@ router.post('/login', async (req, res) => {
 
                 httpOnly: true,
                 secure: true,
-                maxAge: 24 * 60 * 60 * 1000, 
+                maxAge: 7 * 24 * 60 * 60 * 1000, 
                 sameSite: 'Strict'
         
             });
