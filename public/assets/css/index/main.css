@@ -22,12 +22,6 @@ header {
   height: 4rem;
 }
 
-header nav {
-
-
-
-}
-
 header nav ul {
   display: flex;
   justify-content: center;
@@ -52,6 +46,10 @@ header nav ul li i {
   margin-right: 10px;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
 
 
 
@@ -88,18 +86,26 @@ main {
 
 }
 
-main::before {
+main::before,
+main::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url(../../img/background.jpg);
-  background-repeat: no-repeat;
+  width: 50%;
+  height: 100%; 
+  background-image: url(../../img/background3.jpg);
   background-size: cover;
+  background-repeat: no-repeat;
   z-index: -1;
+}
+
+main::before {
+  left: 0; 
+}
+
+main::after {
+  right: 0; 
+  transform: scaleX(-1);
 }
 
 main h1 {
