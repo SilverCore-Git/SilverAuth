@@ -110,9 +110,26 @@ app.get('/assets/:dir/:file', (req, res) => {
 
 });
 
+app.get('/user/:go', (req, res) => {
+
+    const go = req.params.go;
+
+    if (go === 'profile' ) {
+
+        res.sendFile( path.join( __dirname, 'public/panel/user/profile.html' ) );
+
+    } 
+
+    else {
+        res.render('error/404');
+    };
+
+});
+
+
 // const account = require('./src/database/account.js');
 // async function d() {
-//     await account.deleteByEmail('ds@d.d');
+//     await account.deleteByEmail('caca@caca.caca');
 // }
 // d()
 // return

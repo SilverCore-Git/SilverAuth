@@ -13,7 +13,7 @@ require('dotenv').config();
 const AlgoHash = process.env.HASH_ALGO;
 
 
-module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
+module.exports = async function AccountConnect(mail, passwd, expiretime = 24) { 
 
     const hashedPassword = require('crypto').createHash(AlgoHash).update(passwd).digest('hex');
 

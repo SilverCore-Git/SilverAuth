@@ -11,6 +11,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+const { randomUUID } = require('crypto');
 
 // require
 const { verifyToken } = require('../src/token.js');
@@ -42,9 +43,16 @@ router.post('/register', async (req, res) => {
 
     try {
 
+        const nameFirstLetter = name.charAt(0); 
+        const nameLastLetter = name.charAt(name.length - 1);
+        const uuid = randomUUID();
+        const newUuid = `${nameFirstLetter}${nameLastLetter}${uuid.slice(2)}`;
+
         await account.create(mail, name, passwd, 'USER', { 
 
-            ip: ip, 
+            UUID: newUuid,
+
+            ip: ip,
 
             skin: { 
 
@@ -104,7 +112,7 @@ router.post('/register', async (req, res) => {
 
         .catch(err => {
 
-            res.status(500).json({ error: true, message: { silver: 'Erreur lors de la création du compte', server: err || err.message } });
+            res.status(500).json({ error: true, message: { silver: 'Erreur lors de la création du compte', step: 2, server: err || err.message } });
         
         });
 
@@ -112,7 +120,7 @@ router.post('/register', async (req, res) => {
 
     catch (err) {
 
-        res.status(500).json({ error: true, message: { silver: 'Erreur lors de la création du compte', server: err || err.message } });
+        res.status(500).json({ error: true, message: { silver: 'Erreur lors de la création du compte', step: 1, server: err || err.message } });
 
     };
 

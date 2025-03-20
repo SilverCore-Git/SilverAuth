@@ -37,10 +37,16 @@ function connect(mail, passwd, name) {
 
                 if (resp.error) {
 
-                    salert('SilverAuth', resp.resp.message, 'error');
+                    try {
+                        salert('SilverAuth', resp.resp.message, 'error');
+                    }
+                    catch (err) {
+                        salert('SilverAuth', 'Une erreur est survenue', 'error');
+                    }
                     console.error(resp)
                     loader.style.display = 'none';
-                    form.style.display= 'flex';    
+                    form.style.display= 'flex';
+                    return
 
                 }
 

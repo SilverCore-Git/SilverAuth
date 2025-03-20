@@ -1,11 +1,187 @@
+
+
+
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    profile SilverAuth
-</body>
-</html>
+
+    <html lang="en">
+
+        <head>
+
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+
+
+            <link rel="stylesheet" href="/assets/css/profile?ext=css">
+
+
+            <title>Document</title>
+
+        </head>
+
+        
+        <body style="overflow: hidden;">
+    
+            <header>
+    
+                <nav>
+    
+                    <ul>
+
+                        <li> <a href="/"> <i class="bi bi-house-door"></i> Accueil </a> </li>
+
+                        <li> <a> <i class="bi bi-person-circle"></i> Mon compte </a> </li>
+
+                        <li> <a> <i class="bi bi-key"></i> Gérer mes clés </a> </li>
+
+                        <li> <a> <i class="bi bi-file-earmark-text"></i> Documentation </a> </li>
+
+                        <li> <a> <i class="bi bi-people"></i> Qui sommes-nous </a> </li>
+
+                    </ul>
+
+    
+                </nav>
+    
+            </header>
+     
+            <main>
+
+                <div class="container mx-auto p-4">
+
+                    <h1 class="text-4xl font-bold mb-4">Mon profile - <%= name %></h1>
+                    
+
+                    <section class="bg-gray-800 p-6 rounded-lg mb-6">
+
+                        <div class="flex items-center mb-4">
+
+                            <img src="https://placehold.co/64x64" alt="Profile picture of Admin" class="w-16 h-16 rounded-full mr-4" />
+
+                            <div>
+
+                                <h2 class="text-2xl font-bold"><%= name %></h2>
+
+                                <span class="bg-red-600 text-white px-2 py-1 rounded-full text-sm">
+
+                                    <i class="fas fa-trophy"></i> Admin
+
+                                </span>
+
+                            </div>
+
+                        </div>
+                        
+                        <ul class="list-disc list-inside mb-4">
+
+                            <li>Compte créer le : <%= creatat %></li>
+
+                            <li>Email associé : <%= email %></li>
+
+                        </ul>
+                        
+                        <div class="flex space-x-4">
+
+                            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Supprimer mon compte</button>
+
+                        </div>
+                    </section>
+                    
+
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <section class="bg-gray-800 p-6 rounded-lg">
+
+                            <h2 class="text-2xl font-bold mb-4">Changer mon address email</h2>
+
+                            <form>
+
+                                <div class="mb-4">
+
+                                    <label for="email" class="block text-sm font-medium mb-2">Address email</label>
+
+                                    <input id="email" type="email" value="<%= email %>" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label for="current-password" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
+
+                                    <input id="current-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+
+                                    <i class="fas fa-check"></i> Mettre a jours
+
+                                </button>
+
+                            </form>
+
+                        </section>
+                        
+                        <section class="bg-gray-800 p-6 rounded-lg">
+
+                            <h2 class="text-2xl font-bold mb-4">Changer mon mot de passe</h2>
+
+                            <form>
+
+                                <div class="mb-4">
+
+                                    <label for="current-password-2" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
+
+                                    <input id="current-password-2" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label for="new-password" class="block text-sm font-medium mb-2">Mot de passe</label>
+
+                                    <input id="new-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label for="confirm-password" class="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+
+                                    <input id="confirm-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+                                
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+
+                                    <i class="fas fa-check"></i> Mettre a jours
+
+                                </button>
+
+                            </form>
+
+                        </section>
+
+
+                        
+
+                    </section>
+
+                </div>
+
+            </main>
+            
+    
+    
+            
+        </body>
+    
+    </html>
