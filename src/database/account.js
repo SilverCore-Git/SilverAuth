@@ -6,6 +6,11 @@
 
 const connection = require('./database.js');
 
+require('dotenv').config();
+const AlgoHash = process.env.HASH_ALGO;
+
+
+
 class Account {
 
     async create(

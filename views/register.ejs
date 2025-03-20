@@ -1,0 +1,128 @@
+<!-- /**
+ * @author SilverCore
+ * @author SilverAuth
+ * @author MisterPapaye
+*/ -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="/assets/css/register?ext=css">
+        <link rel="stylesheet" href="/assets/css/loader?ext=css">
+        <script src="/assets/js/register?ext=js" type="module" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <title>Se créer un compte SilverAuth</title>
+
+    </head>
+
+    <body>
+        
+
+        <section class="container" style="display: flex; flex-direction: column;">
+
+            <div class="title">
+                <img src="https://api.silverdium.fr/img/auth/logo.png"><h1>SilverAuth</h1> 
+            </div>
+
+            <div class="cardForm" style="display: none;">
+
+                <form id="conect">
+
+                    <div class="connect">
+
+                        <div class="inputsSpan">
+
+                            <span>Se créer un compte Silverauthenticator !</span>
+                            <div class="inputs">
+
+                                <!-- From Uiverse.io by mrhyddenn --> 
+                                <div class="form__group field">
+                                    <input type="text" id="name" class="form__field" placeholder="Psedonyme" required="">
+                                    <label for="name" class="form__label">Psedonyme</label>
+                                </div>
+
+                                <div class="form__group field">
+                                    <input type="password" id="passwd" class="form__field" placeholder="Mot de passe" required="">
+                                    <label for="name" class="form__label">Mot de passe</label>
+                                </div>
+
+                            </div>
+                            <div class="inputs">
+
+                                <!-- From Uiverse.io by mrhyddenn --> 
+                                <div class="form__group field">
+                                    <input type="email" id="mail" class="form__field" placeholder="Email" required="">
+                                    <label for="name" class="form__label">Email</label>
+                                </div>
+
+                                <div class="form__group field">
+                                    <input type="password" id="confpasswd" class="form__field" placeholder="Confirmer le mot de passe" required="">
+                                    <label for="name" class="form__label">Confirmer le mot de passe</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="btnnnn">
+
+                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <span><i class="bi bi-person"></i> J'ai un compte ! </span>
+                                <a href="/auth/register">connexion</a>
+                            </div>
+
+                            <button id="login" class="animated-button">
+                                <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+                                ></path>
+                                </svg>
+                                <span class="text">Continuer </span> 
+                                <span class="circle"></span>
+                                <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+                                ></path>
+                                </svg>
+                            </button>
+
+                        </div>
+
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="part2" style="display: none;">
+
+
+            </div>
+
+            <div id="loader" style="margin-top: 3.5rem;">
+ 
+                <div class="loader"></div>
+
+            </div>
+
+
+        </section>
+
+
+
+    </body>
+
+
+</html>

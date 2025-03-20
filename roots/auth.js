@@ -8,7 +8,9 @@
 // packages
 const express = require("express");
 const router = express.Router();
-const fs = require('fs')
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config();
 
 // require
 const { verifyToken } = require('../src/token.js');
@@ -28,14 +30,15 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/register', async (req, res) => { 
+router.post('/register', async (req, res) => { 
 
-    const mail = req.query.mail;
-    const name = req.query.name;
-    const passwd = req.query.passwd;
-    const dataplus = req.body;
+    const { mail, passwd, name, key } = req.body;
     const ip = req.ip || req.connection.remoteAddress;
 
+    if (key !== process.env.REGISTER_KEY) {
+        res.status(403).json( { error: true, message: "La clé n'est pas valide !" } );
+        return;
+    };
 
     try {
 
@@ -51,8 +54,6 @@ router.get('/register', async (req, res) => {
             },
 
             pp: `${defaultPPURL}/${name}`,
-
-            plus: dataplus
 
         })
 
@@ -72,7 +73,7 @@ router.get('/register', async (req, res) => {
             
             if (sanitizedResp.error) {
 
-                res.status(401).json({ statu: 'error', resp: sanitizedResp });
+                res.status(401).json({ error: true, statu: 'error', resp: sanitizedResp });
 
             } else {
 
@@ -95,7 +96,7 @@ router.get('/register', async (req, res) => {
                 createIMGAccountFile(name);
 
 
-                res.status(200).json({ statu: 'success', resp: sanitizedResp });
+                res.status(200).json({ statu: 'success', message: 'Compte créer avec succes !', resp: sanitizedResp });
 
             }
 
@@ -203,6 +204,31 @@ router.get('/logout', async (req, res) => {
 
 });
 
+
+router.get('/view/:action', (req, res) => {
+
+    const action = req.params.action;
+
+    if (action === 'login') {
+        res.status(200).render('login', { redirect: '/', organisationName: 'SilverAuth' });
+    } else if (action === 'register') {
+        res.status(200).render('register', { redirect: '/', organisationName: 'SilverAuth' });
+    };
+
+});
+
+
+router.get('/get/key/for/register', (req, res) => {
+
+    if (req.hostname === 'localhost') {
+        if (req.query.d === 'olala') {
+            if (req.query.ml === '456') {
+                res.json({ key: process.env.REGISTER_KEY });
+            }
+        }
+    }
+
+})
 
 
 module.exports = router;

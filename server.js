@@ -110,12 +110,12 @@ app.get('/assets/:dir/:file', (req, res) => {
 
 });
 
-// const apikey = require('./src/database/apikey.js');
-
+// const account = require('./src/database/account.js');
 // async function d() {
-//     await apikey.create(4, 'olalacorp', [ "localhost", 'moi.com' ], [ "/example/site", "/example/site/callback" ]).then(resp => { console.log(resp) })
+//     await account.deleteByEmail('ds@d.d');
 // }
 // d()
+// return
  
 app.get('/test', (req, res) => {
     res.render('login')
