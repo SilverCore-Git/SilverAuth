@@ -13,7 +13,8 @@ const fs = require('fs');
 const router = express.Router();
 
 // require
-
+const update = require('../src/database/maj.js');
+const { error } = require("console");
 
 
 
@@ -89,7 +90,7 @@ router.post('/maj/pp', upload.single('file'), async (req, res) => {
 
     catch (err) {
 
-        return res.status(401).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
+        return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
 
     };
 
@@ -99,7 +100,7 @@ router.post('/maj/pp', upload.single('file'), async (req, res) => {
 
 router.post('/maj/email', async (req, res) => {
 
-    const mail = req.body
+    const { oldEmail, newEmail } = req.body;
     const token = req.cookies.silvertoken;
 
     try {
@@ -108,14 +109,18 @@ router.post('/maj/email', async (req, res) => {
 
             if (resp.valid === true) {
 
-                if (resp.data.usr_info.email === mail) {
+                await update.Email(oldEmail, newEmail).then(resp => {
 
+                    if (resp.error) {
+                        return res.status(500).json({ error: true, step: 2, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: resp.message } });
+                    } else {
+                        return res.status(200).json( { resp } );
+                    };
 
-
-                } else {
-                    return res.status(401).json({ error: true, message: {silver: "Email incorect." } });
-                }
-                
+                })
+                .catch(err => {
+                    return res.status(500).json( { error: true, step: 1, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: err || err.message } } );
+                })
 
             }
 
@@ -129,10 +134,96 @@ router.post('/maj/email', async (req, res) => {
 
     catch (err) {
 
-        return res.status(401).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
+        return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
 
     };
 
+});
+
+
+router.post('/maj/pseudo', async (req, res) => {
+
+    const { oldName, newName } = req.body;
+    const token = req.cookies.silvertoken;
+
+    try {
+
+        await verifyToken(token).then(resp, async () => {
+
+            if (resp.valid === true) {
+
+                await update.Pseudo(oldName, newName).then(resp => {
+
+                    if (resp.error) {
+                        return res.status(500).json({ error: true, step: 2, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: resp.message } });
+                    } else {
+                        return res.status(200).json( { resp } );
+                    };
+
+                })
+                .catch(err => {
+                    return res.status(500).json( { error: true, step: 1, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: err || err.message } } );
+                })
+
+            }
+
+            else {
+                return res.status(401).json({ error: true, message: {silver: 'Session invalid.'} });
+            };
+
+        });
+
+    }
+
+    catch (err) {
+
+        return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
+
+    };
+
+});
+
+
+
+router.post('/maj/passwd', async (req, res) => {
+
+    const { email, newPassword } = req.body; // ajouter passwd et mettre a jours l'utilisation des fonctions
+    const token = req.cookies.silvertoken;
+
+    try {
+
+        await verifyToken(token).then(resp, async () => {
+
+            if (resp.valid === true) {
+
+                await update.Pseudo(oldName, newName).then(resp => {
+
+                    if (resp.error) {
+                        return res.status(500).json({ error: true, step: 2, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: resp.message } });
+                    } else {
+                        return res.status(200).json( { resp } );
+                    };
+
+                })
+                .catch(err => {
+                    return res.status(500).json( { error: true, step: 1, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: err || err.message } } );
+                })
+
+            }
+
+            else {
+                return res.status(401).json({ error: true, message: {silver: 'Session invalid.'} });
+            };
+
+        });
+
+    }
+
+    catch (err) {
+
+        return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
+
+    };
 
 });
 
