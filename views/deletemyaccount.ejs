@@ -49,7 +49,7 @@
 
                         <div class="inputsSpan">
 
-                            <span>Se connecter à <%= organisationName %> avec Silverauthenticator</span>
+                            <span>Supprimer son compte Silverauthenticator</span>
                             <div class="inputs">
 
                                 <!-- From Uiverse.io by mrhyddenn --> 
@@ -122,98 +122,6 @@
 
     <script type="module">
 
-        import salert from 'https://corsproxy.io/https://api.silverdium.fr/salert/salert.js';
-
-        const redirect = '<%= redirect %>';
-
-        const mail = document.getElementById('mail');
-        const passwd = document.getElementById('passwd');
-        const form = document.querySelector('.cardForm');
-        const loader = document.getElementById('loader');
-        const btn = document.getElementById('login');
-
-        loader.style.display = 'none';
-        form.style.display= 'flex';
-
-        function connect(mail, passwd) {
-
-            setTimeout(() => {
-                loader.style.display = 'flex';
-                form.style.display= 'none';        
-            }, 300);
-
-            setTimeout( () => {
-
-                fetch(`/auth/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ mail, passwd }),
-                })
-                .then(res => res.json())
-                .then(resp => {
-
-                    if (resp.data.error) {
-
-                        if (resp.data.type === 405) {
-
-                            loader.style.display = 'none';
-                            form.style.display= 'flex';
-                            salert('SilverAuth', 'Email ou mot de pass incorect !', 'warning');
-
-                        } 
-
-                        else {
-
-                            salert('SilverAuth', 'Une erreur est survenue !', 'error');
-
-                        };
-
-                    }
-
-                    else if (resp.data.usr_info.dataplus.banned) {
-
-                        salert('SilverAuth', 'Ton compte est banis...', 'error');
-                        loader.style.display = 'none';
-                        form.style.display= 'flex';
-                        return
-
-                    }
-
-                    else if (resp.statu === 'success') {
-
-                        setTimeout(() => {
-
-                            salert('SilverAuth', resp.data.message, 'success');
-                            
-                            setTimeout(() => {
-                                
-                                window.location.href = `/popup/redirect?url=${redirect}`;
-
-                            }, 300);
-
-                        }, 500);
-
-                    }
-
-                });
-
-            }, 500);
-
-        };
-
-
-
-
-        btn.addEventListener('click', async (event) => {
-
-            event.preventDefault();
-
-            if (passwd.value == '' || mail.value == '') { salert('SilverAuth', `Il faut remplir tout les champs<br>non pas ceux du fermier.`); }
-            else { connect(mail.value, passwd.value) };
-
-        });
 
     </script>
 

@@ -63,6 +63,8 @@ router.post('/register', async (req, res) => {
 
             pp: `${defaultPPURL}/${name}`,
 
+            banned: false 
+
         })
 
         .then(resp => {

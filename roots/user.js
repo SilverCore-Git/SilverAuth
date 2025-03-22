@@ -66,6 +66,13 @@ router.get('/profile', async (req, res) => {
 });
 
 
+router.get('/delete/my/beautiful/silveraccount', (req, res) => {
+
+    res.render('deletemyaccount');
+
+});
+
+
 
 // Configuration de multer
 const storage = multer.diskStorage({

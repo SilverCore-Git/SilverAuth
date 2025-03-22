@@ -12,24 +12,35 @@ class update {
 
     async Email(oldEmail, password, newEmail) {
         let conn;
+    
         try {
+
             conn = await connection.getConnection();
             const hashedPassword = require('crypto').createHash(AlgoHash).update(password).digest('hex');
+            
             const [rows] = await conn.query('SELECT password_hash FROM account WHERE email = ?', [oldEmail]);
-            
-            if (rows.length === 0 || rows[0].password_hash !== hashedPassword) {
-                return { error: true, message: 'Mot de passe incorrect.' };
+    
+            const userData = Array.isArray(rows) ? rows[0] : rows;
+    
+            if (!userData || !userData.password_hash) {
+                return { error: true, message: "Aucun compte trouvé avec cet email." };
             }
-            
+    
+            if (userData.password_hash !== hashedPassword) {
+                return { error: true, message: "Mot de passe incorrect." };
+            }
+    
             await conn.query('UPDATE account SET email = ? WHERE email = ?', [newEmail, oldEmail]);
-            return { message: 'Email mis à jour avec succès.' };
+            return { message: "Email mis à jour avec succès." };
+    
         } catch (err) {
-            console.error('❌ Erreur lors de la mise à jour de l\'email:', err.message || err);
+            console.error("❌ Erreur lors de la mise à jour de l'email:", err.message || err);
             return { error: true, message: err.message || err };
         } finally {
             if (conn) conn.release();
         }
-    }
+    };
+    
 
     async Pseudo(email, password, newPseudo) {
         let conn;
