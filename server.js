@@ -128,9 +128,9 @@ app.get('/user/:go', (req, res) => {
 });
 
 
-// const account = require('./src/database/account.js');
+// const key = require('./src/database/apikey.js');
 // async function d() {
-//     await account.deleteByEmail('caca@caca.caca');
+//     await key.GetKeys(27).then(res => console.log(res))
 // }
 // d()
 // return

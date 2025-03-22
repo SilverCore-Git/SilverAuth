@@ -8,6 +8,10 @@
 const connection = require('./database.js');
 const crypto = require('crypto');
 
+function isObject(variable) {
+    return variable !== null && typeof variable === 'object' && !Array.isArray(variable);
+}
+
 class APIKeyManager {
 
     generateAPIKey() {
@@ -149,6 +153,49 @@ class APIKeyManager {
 
             if (conn) conn.release();
 
+        }
+    }
+
+
+    async GetKeys(userId) {
+        
+        let conn;
+        try {
+            // Connexion à la base de données
+            conn = await connection.getConnection();
+    
+            // Requête pour récupérer toutes les clés API pour un utilisateur donné (par son ID)
+            const result = await conn.query(
+                'SELECT * FROM apikey WHERE account_id = ?',
+                [userId]
+            );
+    
+            return result;
+
+            // Vérification si le résultat est un objet
+            if (!isObject(result)) {
+                return {data: result};
+            }
+    
+            const rows = result[0];  // On accède au tableau de résultats
+
+    
+            // Si aucune clé API n'est trouvée pour cet utilisateur
+            if (!rows || rows.length === 0) {
+                return { error: true, message: 'Aucune clé API trouvée pour cet utilisateur.' };
+            }
+    
+            // Si des clés API sont trouvées, les retourner dans le champ 'data'
+            return { status: 'success', data: rows };
+    
+        } catch (err) {
+            // Gestion des erreurs
+            console.error('❌ Erreur lors de la récupération des clés API de l\'utilisateur:', err.message || err);
+            return { error: true, message: err.message || err };
+    
+        } finally {
+            // Libération de la connexion à la base de données
+            if (conn) conn.release();
         }
     }
 
