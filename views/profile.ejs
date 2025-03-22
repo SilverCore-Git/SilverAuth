@@ -218,7 +218,7 @@
 
                                         <label for="current-password-2" class="block text-sm font-medium mb-2">Photo actuel actuel</label>
 
-                                        <img src="<%= ppimg %>" alt="Photo de profile" class="w-155 h-155 rounded-full mr-4" />
+                                        <img style="width: 15rem; height: 15rem;" src="<%= ppimg %>" alt="Photo de profile" class="rounded-full mr-4" />
 
                                     </div>
 
@@ -226,7 +226,7 @@
 
                                         <label for="new-pp" class="block text-sm font-medium mb-2">Changer ma photo</label>
 
-                                        <input id="new-pp" type="file" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+                                        <input id="file-input" type="file" name="file" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
 
                                     </div>
 
@@ -306,7 +306,6 @@
                     const ConfNewPasswd = document.getElementById('confirm-password');
                     const BYNMAJpasswd = document.getElementById('BYNMAJpasswd');
 
-                    const newPP = document.getElementById('new-pp');
                     const PasswdForPP = document.getElementById('current-password-pp');
                     const BTNMAJpp = document.getElementById('BTNMAJpp');
 
@@ -357,6 +356,106 @@
                             };
 
                         });
+
+                    });
+
+
+
+                    BYNMAJpasswd.addEventListener('click', () => {
+
+                        event.preventDefault();
+
+                        if (NewPasswd !== ConfNewPasswd) {
+                            salert('SilverAuth', 'Le nouveau mot de passe n\'est pas confirmer.', 'error');
+                            return
+                        }
+
+                        const data = { email: '<%= email %>', oldPassword: PasswdForPasswd.value, newPassword: NewPasswd.value };
+                        console.log(data)
+
+                        fetch('/user/maj/passwd', {
+
+                            method: 'POST',
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data)
+
+                        })
+
+                        .then(res => res.json())
+                        .then(resp => {
+
+                            if (resp.error) {
+
+                                salert('SilverAuth', resp.message.silver, 'error');
+                                console.log(resp);
+
+                            }
+
+                            else {
+                                
+                                salert('SilverAuth', resp.message, 'success');
+
+                                setTimeout(() => {
+                                    fetch('/auth/logout').then(res => {
+                                        window.location.reload();
+                                    })
+                                }, 2000);
+
+                            };
+
+                        });
+
+                    });
+
+
+
+                    BTNMAJpp.addEventListener('click', async () => {
+
+                        event.preventDefault();
+
+                        const fileInput = document.getElementById('file-input');
+                        const file = fileInput.files[0];
+
+                        if (!file) {
+                            salert('SilverAuth', 'Aucun fichier séléctioner ')
+                            return;
+                        }
+
+                        const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+                        if (!validImageTypes.includes(file.type)) {
+
+                            salert('SilverAuth', 'Ce fichier n\'est pas une image !', 'error');
+                            return;
+
+                        }
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        try {
+
+                            const response = await fetch('/user/maj/pp?name=<%= name %>', {
+                                method: 'POST',
+                                body: formData,
+                            });
+
+                            const result = await response.json();
+
+                            if (response.ok) {
+                                console.log('Fichier envoyé avec succès:', result);
+                                salert('SilverAuth', result.message.silver, 'success')
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 2000);
+                            } else {
+                                salert('SilverAuth', 'Erreur lors de l\'envoi du fichier', 'error')
+                                console.error('Erreur lors de l\'envoi du fichier:', result);
+                            }
+                        } catch (error) {
+                            salert('SilverAuth', 'Erreur lors de l\'envoi du fichier', 'error')
+                            console.error('Erreur réseau ou serveur:', error);
+                        }
 
                     });
 

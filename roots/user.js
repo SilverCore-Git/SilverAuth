@@ -101,7 +101,7 @@ router.post('/maj/pp', upload.single('file'), async (req, res) => {
         const token = req.cookies.silvertoken;
         const name = req.query.name;
         const tempFile = req.file.path;
-        const defFile = `../data/pp/all/${name}.png`;
+        const defFile = `data/pp/all/${name}.png`;
 
         try {
 
@@ -111,9 +111,11 @@ router.post('/maj/pp', upload.single('file'), async (req, res) => {
 
                     if (resp.data.usr_info.name === name) {
 
-                        await fs.defFile(defFile);
+                        await fs.unlinkSync(defFile);
                         await fs.copyFileSync(tempFile, defFile);
-                        await fs.defFile(tempFile);
+                        await fs.unlinkSync(tempFile);
+
+                        res.status(200).json({ ok: true, message: { silver: 'Photo mise a jours !' } })
 
                     } else {
                         return res.status(401).json({ error: true, message: {silver: "Nom d'utilisateur incorect." } });
@@ -132,7 +134,7 @@ router.post('/maj/pp', upload.single('file'), async (req, res) => {
 
         catch (err) {
 
-            return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
+            return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue', server: err || err.message }});
 
         };
 
@@ -201,7 +203,7 @@ router.post('/maj/pseudo', async (req, res) => {
 
     if (req.hostname === config.hostname) {
 
-        const { mail, passwd, newName } = req.body;
+        const { email, passwd, newName } = req.body;
         const token = req.cookies.silvertoken;
 
         try {
@@ -210,7 +212,7 @@ router.post('/maj/pseudo', async (req, res) => {
 
                 if (resp.valid === true) {
 
-                    await update.Pseudo(mail, passwd, newName).then(resp => {
+                    await update.Pseudo(email, passwd, newName).then(resp => {
 
                         if (resp.error) {
                             return res.status(500).json({ error: true, step: 2, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: resp.message } });
