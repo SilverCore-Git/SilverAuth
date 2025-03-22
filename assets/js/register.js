@@ -58,7 +58,7 @@ function connect(mail, passwd, name) {
                         
                         setTimeout(() => {
                             
-                            window.location.href = `/popup/redirect?url=${redirect}`;
+                            window.location.href = `/auth/view/login`;
 
                         }, 300);
 

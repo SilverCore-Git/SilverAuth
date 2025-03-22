@@ -122,7 +122,7 @@ app.get('/user/:go', (req, res) => {
     } 
 
     else {
-        res.render('error/404');
+        res.status(404).render('error/404');
     };
 
 });
@@ -135,9 +135,11 @@ app.get('/user/:go', (req, res) => {
 // d()
 // return
  
-app.get('/test', (req, res) => {
-    res.render('login')
-})
+
+
+app.use((req, res) => {
+    res.status(404).render('error/404');
+});
 
 const PORT = 8456;
 http.createServer(app).listen(PORT, () => {

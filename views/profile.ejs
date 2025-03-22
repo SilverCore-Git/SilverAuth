@@ -125,12 +125,24 @@
 
                                 <button id="logoutBTN" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Se déconnecter</button>
 
+                                <button id="panelBTN" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Mon panel</button>
+
                             </div>
 
                             <script defer>
 
                                 const deletBTN = document.getElementById('deletBTN');
                                 const logoutBTN = document.getElementById('logoutBTN');
+                                const panelBTN = document.getElementById('panelBTN');
+
+
+                                deletBTN.addEventListener('click', () => {
+                                    window.location.href = '/user/delete/my/beautiful/silveraccount'
+                                });
+
+                                panelBTN.addEventListener('click', () => {
+                                    window.location.href = '/panel'
+                                });
 
                                 logoutBTN.addEventListener('click', () => {
 
@@ -332,11 +344,6 @@
                     const PasswdForName = document.getElementById('current-password-name');
                     const NewName = document.getElementById('new-name');
                     const BTNMAJname = document.getElementById('BTNMAJname');
-
-
-                    deletBTN.addEventListener('click', () => {
-                        window.location.href = '/user/delete/my/beautiful/silveraccount'
-                    });
 
                     BTNMAJemail.addEventListener('click', () => {
 
