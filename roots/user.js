@@ -204,42 +204,68 @@ router.post('/maj/pseudo', async (req, res) => {
     if (req.hostname === config.hostname) {
 
         const { email, passwd, newName } = req.body;
+        const OldName = req.query.name;
         const token = req.cookies.silvertoken;
 
         try {
+            const resToken = await Token.verify(token);
+        
+            if (resToken.valid === true) {
+                try {
+                    const resp = await update.Pseudo(email, passwd, newName);
+        
+                    if (resp.error) {
+                        if (resp.message.includes('Duplicate entry')) {
+                            return res.status(400).json({
+                                error: true,
+                                step: 2.5,
+                                message: { silver: 'Ce pseudo est déjà utilisé. Veuillez en choisir un autre.' }
+                            });
+                        }
+        
+                        return res.status(500).json({
+                            error: true,
+                            step: 2,
+                            message: { silver: 'Une erreur est survenue, réessayez plus tard.', server: resp.message }
+                        });
+                    } else {
 
-            await Token.verify(token).then(async (resp) => {
+                        const OldNamepp = `data/pp/all/${OldName}.png`;
+                        const NewNamepp = `data/pp/all/${newName}.png`;
+                        fs.promises.rename(OldNamepp, NewNamepp);
 
-                if (resp.valid === true) {
+                        const OldNamehead = `data/skinapi/head/${OldName}.png`;
+                        const NewNamehead = `data/skinapi/head/${newName}.png`;
+                        fs.promises.rename(OldNamehead, NewNamehead);
 
-                    await update.Pseudo(email, passwd, newName).then(resp => {
+                        const OldNameskin = `data/skinapi/skin/${OldName}.png`;
+                        const NewNameskin = `data/skinapi/skin/${newName}.png`;
+                        fs.promises.rename(OldNameskin, NewNameskin);
 
-                        if (resp.error) {
-                            return res.status(500).json({ error: true, step: 2, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: resp.message } });
-                        } else {
-                            return res.status(200).json( { resp } );
-                        };
+                        return res.status(200).json({ resp });
+                    
+                    }
+                } catch (err) {
 
-                    })
-                    .catch(err => {
-                        return res.status(500).json( { error: true, step: 1, message: { silver: 'Une erreur est survenue, reessayer plus tard.', server: err || err.message } } );
-                    })
-
+                    return res.status(500).json({
+                        error: true,
+                        step: 1,
+                        message: { silver: 'Une erreur est survenue, réessayez plus tard.', server: err.message || err }
+                    });
                 }
+            } else {
+                return res.status(401).json({
+                    error: true,
+                    message: { silver: 'Session invalide.' }
+                });
+            }
 
-                else {
-                    return res.status(401).json({ error: true, message: {silver: 'Session invalid.'} });
-                };
-
+        } catch (err) {
+            return res.status(500).json({
+                error: true,
+                message: { silver: 'Une erreur est survenue !', server: err.message || err }
             });
-
         }
-
-        catch (err) {
-
-            return res.status(500).json({ error: true, message: { silver: 'Erreur lors de la vérification de la session !', server: err || err.message }});
-
-        };
 
     }
 

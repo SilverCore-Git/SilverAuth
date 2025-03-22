@@ -408,6 +408,48 @@
                     });
 
 
+                    BTNMAJname.addEventListener('click', () => {
+
+                        event.preventDefault();
+
+                        const data = { email: '<%= email %>', passwd: PasswdForName.value, newName: NewName.value };
+                        console.log(data)
+
+                        fetch('/user/maj/pseudo?name=<%= name %>', {
+
+                            method: 'POST',
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(data)
+
+                        })
+
+                        .then(res => res.json())
+                        .then(resp => {
+
+                            if (resp.error) {
+
+                                salert('SilverAuth', resp.message.silver, 'error');
+                                console.log(resp);
+
+                            }
+
+                            else {
+                                
+                                salert('SilverAuth', resp.message, 'success');
+
+                                setTimeout(() => {
+                                    fetch('/auth/logout').then(res => {
+                                        window.location.reload();
+                                    })
+                                }, 2000);
+
+                            };
+
+                        });
+
+                    });
+
+
 
                     BTNMAJpp.addEventListener('click', async () => {
 
