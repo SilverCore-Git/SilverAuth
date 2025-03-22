@@ -1,6 +1,6 @@
 {
 
-    "hostname": "https://auth.silverdium.fr",
+    "hostname": "localhost",
 
     "db": {
 

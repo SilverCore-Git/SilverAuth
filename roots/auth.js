@@ -14,7 +14,7 @@ require('dotenv').config();
 const { randomUUID } = require('crypto');
 
 // require
-const { verifyToken } = require('../src/token.js');
+const Token = require('../src/token.js');
 const AccountConnect = require('../src/auth/connect.js');
 const account = require('../src/database/account.js');
 
@@ -176,7 +176,7 @@ router.get('/verify', async (req, res) => {
     
     try {
 
-        await verifyToken(token).then(resp => {
+        await Token.verify(token).then(resp => {
 
             res.json(resp)
 
@@ -216,11 +216,26 @@ router.get('/logout', async (req, res) => {
 router.get('/view/:action', (req, res) => {
 
     const action = req.params.action;
+    const Redirect = req.query.redirect;
 
-    if (action === 'login') {
-        res.status(200).render('login', { redirect: '/', organisationName: 'SilverAuth' });
-    } else if (action === 'register') {
-        res.status(200).render('register', { redirect: '/', organisationName: 'SilverAuth' });
+    if (Redirect) {
+
+        if (action === 'login') {
+            res.status(200).render('login', { redirect: Redirect, organisationName: 'SilverAuth' });
+        } else if (action === 'register') {
+            res.status(200).render('register');
+        };
+
+    }
+
+    else {
+
+        if (action === 'login') {
+            res.status(200).render('login', { redirect: '/', organisationName: 'SilverAuth' });
+        } else if (action === 'register') {
+            res.status(200).render('register');
+        };
+
     };
 
 });

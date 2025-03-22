@@ -7,13 +7,13 @@
 
 
 const account = require('../database/account.js');
-const { createToken } = require('../token.js');
+const Token = require('../token.js');
 
 require('dotenv').config();
 const AlgoHash = process.env.HASH_ALGO;
 
 
-module.exports = async function AccountConnect(mail, passwd, expiretime = 24) { 
+module.exports = async function AccountConnect(mail, passwd, expiretime = 7*24) { 
 
     const hashedPassword = require('crypto').createHash(AlgoHash).update(passwd).digest('hex');
 
@@ -35,7 +35,7 @@ module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
 
         if (hashedPassword === res.data.password_hash) {
 
-            const token = await createToken(res.data.id, res.data.pseudo, res.data.email, res.data.dataplus)
+            const token = await Token.create(res.data.id, res.data.pseudo, res.data.email, res.data.created_at, res.data.dataplus)
 
             return { message: 'Connexion réussie !', token: token, expiretime: expiretime };
 
@@ -48,6 +48,6 @@ module.exports = async function AccountConnect(mail, passwd, expiretime = 24) {
         };
 
     } catch (err) {
-        return { error: true, type: 405, message: 'invalid credential' };
+        return { error: true, type: 500, message: { silver: 'Une erreur est survenue', server: err || err.message } };
     }
 };

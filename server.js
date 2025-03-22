@@ -96,7 +96,7 @@ app.get('/example/site/callback', (req, res) => {
 
 app.get('/favicon.ico', (req, res) => {
 
-    res.sendFile( path.join( __dirname, 'assets', 'favicon.ico' ) )
+    res.redirect('https://api.silverdium.fr/img/auth/favicon.ico');
 
 });
 

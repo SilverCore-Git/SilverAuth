@@ -23,6 +23,14 @@
             <link rel="stylesheet" href="/assets/css/profile?ext=css">
 
 
+            <!-- meta open graph -->
+            <meta property="og:title" content="SilverAuth">
+            <meta property="og:description" content="Silverauthenticator, un compte pour tout, by SilverCore">
+            <meta property="og:image" content="https://api.silverdium.fr/img/auth/logo.png">
+            <meta property="og:site_name" content="Profile - SilverAuth - Authantificator">
+            <meta property="og:locale" content="fr_FR">
+
+
             <title>Document</title>
 
         </head>
@@ -64,7 +72,7 @@
 
                         <div class="flex items-center mb-4">
 
-                            <img src="https://placehold.co/64x64" alt="Profile picture of Admin" class="w-16 h-16 rounded-full mr-4" />
+                            <img src="<%= ppimg %>" alt="Photo de profile" class="w-16 h-16 rounded-full mr-4" />
 
                             <div>
 
@@ -82,6 +90,8 @@
                         
                         <ul class="list-disc list-inside mb-4">
 
+                            <li>UUID : <%= uuid %></li>
+
                             <li>Compte créer le : <%= creatat %></li>
 
                             <li>Email associé : <%= email %></li>
@@ -90,7 +100,7 @@
                         
                         <div class="flex space-x-4">
 
-                            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Supprimer mon compte</button>
+                            <button id="deletBTN" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Supprimer mon compte</button>
 
                         </div>
                     </section>
@@ -106,21 +116,21 @@
 
                                 <div class="mb-4">
 
-                                    <label for="email" class="block text-sm font-medium mb-2">Address email</label>
+                                    <label for="Newemail" class="block text-sm font-medium mb-2">Address email</label>
 
-                                    <input id="email" type="email" value="<%= email %>" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+                                    <input id="Newemail" type="email" value="<%= email %>" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
 
                                 </div>
 
                                 <div class="mb-4">
 
-                                    <label for="current-password" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
+                                    <label for="email-current-password" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
 
-                                    <input id="current-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+                                    <input id="email-current-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
 
                                 </div>
 
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button id="BTNMAJemail" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 
                                     <i class="fas fa-check"></i> Mettre a jours
 
@@ -160,7 +170,7 @@
 
                                 </div>
                                 
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button id="BYNMAJpasswd" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 
                                     <i class="fas fa-check"></i> Mettre a jours
 
@@ -181,7 +191,7 @@
 
                                     <label for="current-password-2" class="block text-sm font-medium mb-2">Photo actuel actuel</label>
 
-                                    <img src="https://placehold.co/155x155" alt="Profile picture of Admin" class="w-155 h-155 rounded-full mr-4" />
+                                    <img src="<%= ppimg %>" alt="Photo de profile" class="w-155 h-155 rounded-full mr-4" />
 
                                 </div>
 
@@ -193,8 +203,17 @@
 
                                 </div>
 
+
+                                <div class="mb-4">
+
+                                    <label for="current-password-pp" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
+
+                                    <input id="current-password-pp" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+
+                                </div>
+
                                 
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button id="BTNMAJpp" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 
                                     <i class="fas fa-check"></i> Mettre a jours
 
@@ -213,29 +232,21 @@
 
                                 <div class="mb-4">
 
-                                    <label for="current-password-2" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
+                                    <label for="current-password-name" class="block text-sm font-medium mb-2">Mot de passe actuel</label>
 
-                                    <input id="current-password-2" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
-
-                                </div>
-
-                                <div class="mb-4">
-
-                                    <label for="new-password" class="block text-sm font-medium mb-2">Mot de passe</label>
-
-                                    <input id="new-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+                                    <input id="current-password-name" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
 
                                 </div>
 
                                 <div class="mb-4">
 
-                                    <label for="confirm-password" class="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+                                    <label for="new-name" class="block text-sm font-medium mb-2">Nouveau pseudo</label>
 
-                                    <input id="confirm-password" type="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
+                                    <input id="new-name" type="text" class="w-full p-2 bg-gray-700 border border-gray-600 rounded" />
 
                                 </div>
                                 
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <button id="BTNMAJname" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
 
                                     <i class="fas fa-check"></i> Mettre a jours
 
@@ -252,9 +263,32 @@
 
             </main>
             
-    
-    
-            
+
+            <script>
+
+                const deletBTN = document.getElementById('deletBTN');
+
+                const Newemail = document.getElementById('Newemail');
+                const PasswdForEmail = document.getElementById('email-current-password');
+                const BTNMAJemail = document.getElementById('BTNMAJemail');
+
+                const PasswdForPasswd = document.getElementById('current-password-2');
+                const NewPasswd = document.getElementById('new-password');
+                const ConfNewPasswd = document.getElementById('confirm-password');
+                const BYNMAJpasswd = document.getElementById('BYNMAJpasswd');
+
+                const newPP = document.getElementById('new-pp');
+                const PasswdForPP = document.getElementById('current-password-pp');
+                const BTNMAJpp = document.getElementById('BTNMAJpp');
+
+                const PasswdForName = document.getElementById('current-password-name');
+                const NewName = document.getElementById('new-name');
+                const BTNMAJname = document.getElementById('BTNMAJname');
+
+
+            </script>
+
+
         </body>
-    
+
     </html>
