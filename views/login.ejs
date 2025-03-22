@@ -172,15 +172,6 @@
 
                     }
 
-                    else if (resp.data.usr_info.dataplus.banned) {
-
-                        salert('SilverAuth', 'Ton compte est banis...', 'error');
-                        loader.style.display = 'none';
-                        form.style.display= 'flex';
-                        return
-
-                    }
-
                     else if (resp.statu === 'success') {
 
                         setTimeout(() => {

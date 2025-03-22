@@ -32,6 +32,25 @@
                 <meta property="og:site_name" content="Profile - SilverAuth - Authantificator">
                 <meta property="og:locale" content="fr_FR">
 
+                <script>
+                    
+                    fetch('/auth/verify').then(res => res.json())
+
+                    .then(resp => {
+
+                        if (resp.data.usr_info.dataplus.banned) {
+
+                            salert('SilverAuth', 'Ton compte est banis...', 'error');
+
+                            setTimeout(() => {
+                                window.location.href = '/'
+                            }, 5000);
+
+                        }
+
+                    });
+
+                </script>
 
                 <title>Document</title>
 
@@ -330,8 +349,10 @@
                                 salert('SilverAuth', resp.message, 'success');
 
                                 setTimeout(() => {
-                                    window.location.reload();
-                                }, 1500);
+                                    fetch('/auth/logout').then(res => {
+                                        window.location.reload();
+                                    })
+                                }, 2000);
 
                             };
 
