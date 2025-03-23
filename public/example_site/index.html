@@ -47,14 +47,15 @@
             <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Statu =  <div id="statu"></div></div>
             <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Name =  <div id="name"></div></div>
             <div style="display: flex; flex-direction: row; font-size: 1.3rem;">Email =  <div id="email"></div></div>
+            <div style="display: flex; flex-direction: row; font-size: 1.3rem;">PP =  <img style="width: 5rem; height: 5rem;" id="pp"></div>
         </div>
     </div>
     <script>
  
         function login() {
 
-            const key = '1f552321780ccd3134b1e84fe9c48b48e6f09be11d3b894a3159f7546c41a4b8';
-            window.location.href = `/popup/auth?action=login&redirect=/example/site/callback&key=${key}`;
+            const key = '764c0266deaf2dece39f446bb293b54985dec6460de06e58f336661bf92838bb';
+            window.location.href = `/popup/auth?action=login&redirect=http://localhost:8456/example/site/callback&key=${key}`;
 
         };
 
@@ -79,11 +80,13 @@
 
                     document.getElementById('name').innerText = resp.data.usr_info.name;
                     document.getElementById('email').innerText = resp.data.usr_info.email;
+                    document.getElementById('pp').src = `http://localhost:8456/api/skin/view/pp/${resp.data.usr_info.name}`;
                     document.getElementById('statu').innerText = 'Connecté';
 
                 } else {
 
                     document.getElementById('name').innerText = '';
+                    document.getElementById('pp').src = '';
                     document.getElementById('email').innerText = '';
                     document.getElementById('statu').innerText = 'Déconécté';
 

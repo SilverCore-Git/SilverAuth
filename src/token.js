@@ -16,14 +16,26 @@ class token {
     async create(userID, name, mail, createat, dataplus, expiretime = 7*24) {
 
         const payload = {
-            expiretime: expiretime,
+
+            JWTExpireAt: expiretime,
+
             usr_info: {
+
                 userId: userID,
                 createat: createat,
                 name: name,
                 email: mail,
-                dataplus: dataplus
+                dataplus: dataplus,
+
+                pp: `${dataplus.url.pp}/${name}`,
+
+                skin: {
+                    head: `${dataplus.url.skin.head}/${name}`,
+                    head: `${dataplus.url.skin.skin}/${name}`
+                }
+
             }
+
         };
     
         const options = {

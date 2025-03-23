@@ -50,16 +50,12 @@ router.get('/auth', async (req, res) => {
         const allowed_domains = client.data.data.allowed_domains;
         const allowed_redirect = client.data.data.redirect_urls;
 
-        if (!allowed_domains.includes(req.hostname)) {
-            res.status(400).json({ error: true, message: 'Nom de domaine non lié a l\'api key !' });
-            return
-        }
+        if (allowed_domains.includes(req.hostname)) {}
+        else { return res.status(400).json({ error: true, message: 'Nom de domaine non lié a l\'api key !' }) };
 
 
-        if (!allowed_redirect.includes(redirect)) {
-            res.status(400).json({ error: true, message: 'Url de redirection non lié a l\'api key !' });
-            return
-        }
+        if (allowed_redirect.includes(redirect)) {}
+        else { return res.status(400).json({ error: true, message: 'Url de redirection non lié a l\'api key !' }) }
 
 
         if (!client.valid) {
@@ -78,7 +74,7 @@ router.get('/auth', async (req, res) => {
             
             if (action === 'login') {
 
-                res.status(200).render('login', { redirect: redirect });
+                res.status(200).render('login', { redirect: redirect, organisationName: client.data.data.organization_name });
 
             }
 
@@ -149,7 +145,7 @@ router.get('/getaccount/:id', (req, res) => {
     res.cookie('silvertoken', data.token, {
         httpOnly: true,
         secure: true,
-        maxAge: 24 * 60 * 60 * 1000, 
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
         sameSite: 'Strict'
     });
 

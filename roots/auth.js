@@ -54,14 +54,18 @@ router.post('/register', async (req, res) => {
 
             ip: ip,
 
-            skin: { 
+            url: {
 
-                skin: `${skinurl}/${name}`, 
-                head: `${headurl}/${name}` 
+                skin: { 
+
+                    skin: `${skinurl}`, 
+                    head: `${headurl}` 
+
+                },
+
+                pp: `${defaultPPURL}`,
 
             },
-
-            pp: `${defaultPPURL}/${name}`,
 
             banned: false 
 

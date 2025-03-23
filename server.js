@@ -111,6 +111,10 @@ app.get('/assets/:dir/:file', (req, res) => {
 
 });
 
+app.get('/doc', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/doc/index.html'))
+})
+
 app.get('/user/:go', (req, res) => {
 
     const go = req.params.go;
