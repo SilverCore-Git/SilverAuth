@@ -149,7 +149,7 @@ router.post('/apikey/key/maj/:key', async (req, res) => {
       return res.status(200).json({ message: { silver: "Mise à jour réussie" }, data: body });
 
   } catch (error) {
-    
+
       console.error('Erreur APIKey update:', error);
       return res.status(500).json({ error: true, message: { silver: "Erreur serveur" } });
 
@@ -157,6 +157,65 @@ router.post('/apikey/key/maj/:key', async (req, res) => {
 
 });
 
+
+router.use((req, res, next) => {
+  const originalJson = res.json;
+  
+  // Surcharger la méthode .json de Express pour gérer les BigInt
+  res.json = function (body) {
+      if (typeof body === 'object' && body !== null) {
+          body = handleBigInt(body);
+      }
+      return originalJson.call(this, body);
+  };
+  
+  next();
+});
+
+// Fonction pour gérer les BigInt
+function handleBigInt(obj) {
+  return JSON.parse(JSON.stringify(obj, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value // Convertir BigInt en string
+  ));
+}
+
+
+router.post('/apikey/key/add', async (req, res) => {
+
+  try {
+
+    const organisationName = req.query.name;
+    const token = req.cookies.silvertoken;
+
+    if (req.hostname !== config.hostname) {
+        return res.status(403).json({ error: true, message: { silver: "Accès refusé" } });
+    }
+
+    const tokenResp = await Token.verify(token);
+    if (!tokenResp.valid) {
+        return res.status(401).json({ error: true, message: { silver: "Token invalide" } });
+    }
+
+    apikey.create(tokenResp.data.usr_info.userId, organisationName ).then(resp => {
+
+      if (resp.error) {
+        return res.status(400).json({ error: true, message: { silver: 'Une erreur est survenue', server: resp.message }, data: resp });
+      }
+      else {
+        return res.status(200).json({ message: 'Clé crée avec success', data: resp });
+      };
+
+    })
+
+
+  } catch (error) {
+
+    console.error('Erreur APIKey update:', error);
+    return res.status(500).json({ error: true, message: { silver: "Erreur serveur" } });
+
+  }
+
+})
 
 
 

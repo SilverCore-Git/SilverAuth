@@ -21,73 +21,70 @@ class APIKeyManager {
 
     async create(
 
-            accountId, 
-            organizationName, 
-            allowedDomains = null, 
-            redirectUrls = null,
-            dataplus = null, 
-            dailyRequestLimit = 1000,
-            expiresAt = null
-
+        accountId, 
+        organizationName, 
+        allowedDomains = [], 
+        redirectUrls = [], 
+        dataplus = [], 
+        dailyRequestLimit = 1000, 
+        expiresAt = null
+    
     ) {
-
         let conn;
         try {
-
             
+            // Vérification et conversion de expiresAt
             if (expiresAt instanceof Date && !isNaN(expiresAt)) {
                 expiresAt = expiresAt.toISOString();
             }
-
-
+    
             if (!expiresAt) {
                 expiresAt = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
                     .toISOString()
                     .slice(0, 19)
                     .replace("T", " ");
             }
-            
-
-
+    
             // Connexion à la base de données
             conn = await connection.getConnection();
-
+    
             // Génération de la clé API
             const apiKey = this.generateAPIKey();
-
-
-            // Insertion dans la table apikey
+    
+            // Fonction pour gérer les BigInt
+            const stringifyBigInt = (obj) => {
+                return JSON.stringify(obj, (key, value) =>
+                    typeof value === 'bigint' ? value.toString() : value
+                );
+            };
+    
+            // Insertion dans la table apikey avec gestion de BigInt
             const resultApiKey = await conn.query(
-
                 'INSERT INTO apikey (api_key, created_at, expires_at, daily_request_limit, allowed_domains, redirect_urls, organization_name, dataplus, account_id) VALUES (?, NOW(), ?, ?, ?, ?, ?, ?, ?)',
                 [
                     apiKey, 
                     expiresAt, 
                     dailyRequestLimit, 
-                    JSON.stringify(allowedDomains), 
-                    JSON.stringify(redirectUrls), 
+                    stringifyBigInt(allowedDomains),  // Sérialisation des données avec BigInt
+                    stringifyBigInt(redirectUrls),    // Sérialisation des données avec BigInt
                     organizationName, 
-                    JSON.stringify(dataplus), 
+                    stringifyBigInt(dataplus),        // Sérialisation des données avec BigInt
                     accountId
                 ]
-
             );
-
+    
             console.log('✅ Clé API créés avec succès !');
             return { key: apiKey, data: resultApiKey };
-
+    
         } catch (err) {
-
             console.error('❌ Erreur lors de la création de la clé API:', err.message || err);
             return { error: true, message: err.message || err };
-
+    
         } finally {
-
             if (conn) conn.release();
-
         }
-
     }
+    
 
 
     async delete(apiKey) {
