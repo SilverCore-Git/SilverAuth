@@ -8,122 +8,226 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
+<head>
 
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="/assets/css/login?ext=css">
-        <link rel="stylesheet" href="/assets/css/loader?ext=css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/assets/css/login?ext=css">
+    <link rel="stylesheet" href="/assets/css/loader?ext=css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
 
-        <!-- meta open graph -->
-        <meta property="og:title" content="SilverAuth">
-        <meta property="og:description" content="Silverauthenticator, un compte pour tout, by SilverCore">
-        <meta property="og:image" content="https://api.silverdium.fr/img/auth/logo.png">
-        <meta property="og:site_name" content="Login - SilverAuth - Authantificator">
-        <meta property="og:locale" content="fr_FR">
+    <title>Supprimer mon compte SilverAuth</title>
 
+</head>
 
-        <title>Se connecter avec SilverAuth</title>
+<body>
 
-    </head>
+    <section class="container" style="flex-direction: column;">
+        <div class="title" onclick="window.location.href='/'">
+            <img src="https://api.silverdium.fr/img/auth/logo.png" alt="SilverAuth Logo">
+            <h1>SilverAuth</h1>
+        </div>
 
-    <body>
-        
-
-        <section class="container" style="display: flex; flex-direction: column;">
-
-            <div style="cursor: pointer;" onclick="window.location.href = '/'" class="title">
-                <img src="https://api.silverdium.fr/img/auth/logo.png"><h1>SilverAuth</h1> 
-            </div>
-
-            <div class="cardForm">
-
-                <form id="conect">
-
-                    <div class="connect">
-
-                        <div class="inputsSpan">
-
-                            <span>Supprimer son compte Silverauthenticator</span>
-                            <div class="inputs">
-
-                                <!-- From Uiverse.io by mrhyddenn --> 
-                                <div class="form__group field">
-                                    <input type="email" id="mail" class="form__field" placeholder="Email" required="">
-                                    <label for="name" class="form__label">Email</label>
-                                </div>
-
-                                <div class="form__group field">
-                                    <input type="password" id="passwd" class="form__field" placeholder="Mot de passe" required="">
-                                    <label for="name" class="form__label">Mot de passe</label>
-                                </div>
-
+        <div class="cardForm" style="display: block;">
+            <form id="connect">
+                <div class="connect">
+                    <div class="inputsSpan">
+                        <span>Supprimer mon compte SilverAuthenticator</span>
+                        <div class="inputs" style="flex-direction: column;">
+                            <div class="form__group field">
+                                <input type="email" id="mail" class="form__field" placeholder="Email" required>
+                                <label for="mail" class="form__label">Email</label>
                             </div>
 
-                        </div>
-
-
-                        <div class="btnnnn">
-
-                            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <span><i class="bi bi-person"></i> Pas de compte ?</span>
-                                <a href="/auth/view/register">inscription</a>
-                            </div>
-
-                            <button id="login" class="animated-button">
-                                <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
-                                ></path>
-                                </svg>
-                                <span class="text">Continuer </span>
-                                <span class="circle"></span>
-                                <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
-                                ></path>
-                                </svg>
+                            <button id="delAccount" class="button" type="button">
+                                <span class="button__text">Supprimer mon compte</span>
+                                <span class="button__icon">
+                                    <svg class="svg" height="512" width="512" viewBox="0 0 512 512">
+                                        <path d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                                            style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+                                        <line style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" x1="80" x2="432" y1="112" y2="112"/>
+                                        <path d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                                            style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/>
+                                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="256" x2="256" y1="176" y2="400"/>
+                                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="184" x2="192" y1="176" y2="400"/>
+                                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="328" x2="320" y1="176" y2="400"/>
+                                    </svg>
+                                </span>
                             </button>
 
+                            <button id="btnExit" type="button" class="button2" onclick="window.location.href='/'">
+                                Finalement non
+                            </button>
                         </div>
-
-
                     </div>
+                </div>
+            </form>
+        </div>
+    </section>
 
-                </form>
+    <script type="module" defer>
+        import salert from 'https://corsproxy.io/https://api.silverdium.fr/salert/salert.js';
 
-            </div>
+        document.getElementById('delAccount').addEventListener('click', async () => {
+            const email = document.getElementById('mail').value;
+
+            if (email === '') {
+                salert('SilverAuth', 'Remplir tous les champs', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/user/delete/my/beautiful/silveraccount/del?email=${encodeURIComponent(email)}`);
+                const res = await response.json();
+
+                if (res.error) {
+                    salert('SilverAuth', res.message.silver, 'error');
+                } else if (res.success) {
+                    salert('SilverAuth', res.message.silver, 'success');
+
+                    await fetch('/auth/logout');
+
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500);
+                }
+            } catch (error) {
+                salert('SilverAuth', 'Une erreur est survenue', 'error');
+            }
+        });
+    </script>
 
 
-            <div class="part2" style="display: none;">
+        <style>
+          /* From Uiverse.io by nikk7007 */ 
+          .button2 {
+           --color: #00A97F;
+           padding: 0.8em 1.7em;
+           background-color: transparent;
+           border-radius: .3em;
+           position: relative;
+           overflow: hidden;
+           cursor: pointer;
+           transition: .5s;
+           font-weight: 400;
+           font-size: 17px;
+           border: 1px solid;
+           font-family: inherit;
+           text-transform: uppercase;
+           color: var(--color);
+           z-index: 1;
+          }
+          
+          .button2::before, .button2::after {
+           content: '';
+           display: block;
+           width: 50px;
+           height: 50px;
+           transform: translate(-50%, -50%);
+           position: absolute;
+           border-radius: 50%;
+           z-index: -1;
+           background-color: var(--color);
+           transition: 1s ease;
+          }
+          
+          .button2::before {
+           top: -1em;
+           left: -1em;
+          }
+          
+          .button2::after {
+           left: calc(100% + 1em);
+           top: calc(100% + 1em);
+          }
+          
+          .button2:hover::before, .button2:hover::after {
+           height: 410px;
+           width: 410px;
+          }
+          
+          .button2:hover {
+           color: rgb(10, 25, 30);
+          }
+          
+          .button2:active {
+           filter: brightness(.8);
+          }
+          
 
 
-            </div>
-
-            <div id="loader" style="margin-top: 3.5rem;">
- 
-                <div class="loader"></div>
-
-            </div>
 
 
-        </section>
-
+            /* From Uiverse.io by sihamjardi */ 
+            .button {
+              position: relative;
+              border-radius: 6px;
+              width: 300px;
+              height: 40px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              border: 1px solid #cc0000;
+              background-color: #e50000;
+              overflow: hidden;
+            }
+            
+            .button,
+            .button__icon,
+            .button__text {
+              transition: all 0.3s;
+            }
+            
+            .button .button__text {
+              transform: translateX(35px);
+              color: #fff;
+              font-weight: 600;
+            }
+            
+            .button .button__icon {
+              position: absolute;
+              transform: translateX(255px);
+              height: 100%;
+              width: 39px;
+              background-color: #cc0000;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .button .svg {
+              width: 20px;
+            }
+            
+            .button:hover {
+              background: #cc0000;
+            }
+            
+            .button:hover .button__text {
+              color: transparent;
+            }
+            
+            .button:hover .button__icon {
+              width: 148px;
+              transform: translateX(70px);
+            }
+            
+            .button:active .button__icon {
+              background-color: #b20000;
+            }
+            
+            .button:active {
+              transform: scale(0.95);
+            }
+            
+        </style>
 
 
     </body>
-
-
-
-    <script type="module">
-
-
-    </script>
 
 
 </html>

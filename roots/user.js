@@ -14,6 +14,7 @@ const router = express.Router();
 
 // require
 const update = require('../src/database/maj.js');
+const account = require('../src/database/account.js');
 const config = require('../config.json');
 const Token = require('../src/token.js');
 
@@ -67,6 +68,46 @@ router.get('/profile', async (req, res) => {
 
 
 router.get('/delete/my/beautiful/silveraccount', (req, res) => {
+
+    res.render('deletemyaccount');
+
+});
+
+router.get('/delete/my/beautiful/silveraccount/del', async (req, res) => {
+
+    const email = req.query.email;
+    const token = req.cookies.silvertoken;
+
+    await Token.verify(token).then(async resp => {
+
+        if (resp.valid) {
+
+            if (resp.data.usr_info.email === email) {
+
+                await account.deleteByEmail(email).then(resp2 => {
+
+                    if (resp2.error) {
+                        return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue.' } })
+                    }
+                    else {
+                        fs.unlinkSync(`data/pp/all/${resp.data.usr_info.name}.png`)
+                        fs.unlinkSync(`data/skinapi/head/${resp.data.usr_info.name}.png`)
+                        fs.unlinkSync(`data/skinapi/skin/${resp.data.usr_info.name}.png`)
+                        return res.status(200).json({ success: true, message: { silver: 'Compte suprimer avec succès' } });
+                    }
+
+                })
+
+            } else {
+                return res.status(400).json({error: true, message: { silver: 'Email invalid' }});
+            };
+
+        } else {
+            res.redirect('/auth/view/login');
+        };
+
+    })
+
 
     res.render('deletemyaccount');
 
