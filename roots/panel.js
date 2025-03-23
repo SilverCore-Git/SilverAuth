@@ -117,23 +117,46 @@ router.get('/settings', (req, res) => {
 });
 
 
-router.get('/get/apikeys', (req, res) => {
 
-  const usrid = req.body;
 
-  if (req.hostname === config.hostname) {
+router.post('/apikey/key/maj/:key', async (req, res) => {
 
-    apikey.GetKeys(usrid).then(resp => {
+  try {
 
-    })
+      const body = req.body;
+      const apiKey = req.params.key;
+      const token = req.cookies.silvertoken;
 
-  }
+      if (req.hostname !== config.hostname) {
+          return res.status(403).json({ error: true, message: { silver: "Accès refusé" } });
+      }
 
-  else {
-    res.status(400).json({ error: true, message: 'acces refusé' })
+      const tokenResp = await Token.verify(token);
+      if (!tokenResp.valid) {
+          return res.status(401).json({ error: true, message: { silver: "Token invalide" } });
+      }
+
+      const updateResp = await apikey.update(apiKey, {
+          organizationName: body.Name,
+          allowedDomains: body.Domaines,
+          redirectUrls: body.Redirects
+      });
+
+      if (updateResp.error) {
+          return res.status(500).json({ error: true, message: { silver: updateResp.message } });
+      }
+
+      return res.status(200).json({ message: { silver: "Mise à jour réussie" }, data: body });
+
+  } catch (error) {
+    
+      console.error('Erreur APIKey update:', error);
+      return res.status(500).json({ error: true, message: { silver: "Erreur serveur" } });
+
   }
 
 });
+
 
 
 

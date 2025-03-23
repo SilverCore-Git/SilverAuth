@@ -1,159 +1,378 @@
-        <!-- Content Wrapper -->
-        <div class="content-wrapper col-md-12 ml-0">
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">Gestion des Clés API</h1>
+<script type="module" defer>
+
+    import salert from 'https://corsproxy.io/https://api.silverdium.fr/salert/salert.js';
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/panel/apikey/data')
+            .then(res => res.json())
+            .then(apiKeys => {
+                // Utilisation de apiKeys directement dans le contexte du .then()
+                updateApiKeyTable(apiKeys);
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const page = urlParams.get('page');
+                const index = urlParams.get('index');
+
+                if (page === 'manage_key' && index !== null && apiKeys[index]) {
+                    setTimeout(() => openManager(apiKeys, index), 100); // Assurer que le DOM est prêt
+                }
+
+                // Fonction pour ouvrir le modal de gestion d'une clé API
+                function openManager(apiKeys, index) {
+                    const key = apiKeys?.[index];
+
+                    if (!key) {
+                        console.error("Erreur : Clé API non trouvée.");
+                        return;
+                    }
+
+                    const nameField = document.getElementById('manageApiKeyName');
+                    const keyField = document.getElementById('manageApiKey');
+                    const domainList = document.getElementById('domainList');
+                    const redirectList = document.getElementById('redirectList');
+
+                    if (!nameField || !keyField || !domainList || !redirectList) {
+                        console.error("Erreur : Un ou plusieurs éléments du formulaire sont introuvables.");
+                        return;
+                    }
+
+                    history.pushState(null, "", `/panel/apikey?page=manage_key&index=${index}`);
+
+                    nameField.value = key.organization_name || '';
+                    keyField.value = key.api_key || '';
+
+                    domainList.innerHTML = '';
+                    const domains = key.allowed_domains || [];
+                    domains.forEach(domain => addDomainField(domain));
+
+                    redirectList.innerHTML = '';
+                    const redirects = key.redirect_urls || [];
+                    redirects.forEach(redirect => addRedirectField(redirect));
+
+                    $('#manageApiKeyModal').modal('show');
+                }
+
+                // Fonction pour mettre à jour la table des clés API
+                function updateApiKeyTable(apiKeys) {
+                    const tableBody = document.getElementById('apiKeyTableBody');
+                    tableBody.innerHTML = '';
+
+                    apiKeys.forEach((key, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${key.organization_name}</td>
+                            <td><input type="url" value="${key.api_key}" readonly></td>
+                            <td>${key.created_at}</td>
+                            <td>${key.expires_at}</td>
+                            <td>${key.daily_request_limit}</td>
+                            <td>${key.id}</td>
+                            <td>
+                                <a href="/panel/apikey?page=manage_key&index=${index}"> <button class="btn btn-primary btn-sm" ${index})">Gérer</button></a>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+
+                var key123 = apiKeys;
+
+                // Ajouter un champ de domaine
+                function addDomainField(domain = '') {
+                    const domainList = document.getElementById('domainList');
+                    const div = document.createElement('div');
+                    div.classList.add('input-group', 'mb-2');
+                    div.innerHTML = `
+                        <input type="url" class="form-control domain-input" value="${domain}" placeholder="Ex: https://example.com">
+                        <div class="input-group-append">
+                            <button class="btn btn-danger remove-domain" type="button">❌</button>
                         </div>
-                    </div>
+                    `;
+                    domainList.appendChild(div);
+                    div.querySelector('.remove-domain').addEventListener('click', () => div.remove());
+                }
+
+                // Ajouter un champ de redirection
+                function addRedirectField(redirect = '') {
+                    const redirectList = document.getElementById('redirectList');
+                    const div = document.createElement('div');
+                    div.classList.add('input-group', 'mb-2');
+                    div.innerHTML = `
+                        <input type="url" class="form-control redirect-input" value="${redirect}" placeholder="Ex: https://redirect.com">
+                        <div class="input-group-append">
+                            <button class="btn btn-danger remove-redirect" type="button">❌</button>
+                        </div>
+                    `;
+                    redirectList.appendChild(div);
+                    div.querySelector('.remove-redirect').addEventListener('click', () => div.remove());
+                }
+
+                // Ajouter des champs domaine et redirection au formulaire
+                document.getElementById('addDomain').addEventListener('click', () => addDomainField());
+                document.getElementById('addRedirect').addEventListener('click', () => addRedirectField());
+
+                // Sauvegarder les modifications de la clé API
+                document.getElementById('updateApiKey').addEventListener('click', async () => {
+
+                    const updatedName = document.getElementById('manageApiKeyName').value;
+
+                    const domainInputs = document.querySelectorAll('.domain-input');
+                    const redirectInputs = document.querySelectorAll('.redirect-input');
+
+                    const updatedDomains = Array.from(domainInputs).map(input => input.value.trim()).filter(value => value);
+                    const updatedRedirects = Array.from(redirectInputs).map(input => input.value.trim()).filter(value => value);
+
+
+                    history.pushState(null, "", `/panel/apikey?page=manage_key&action=save&statu=processing&index=${index}`);
+
+
+                    if (updatedName) {
+
+                        const fetch_body = { Domaines: updatedDomains, Redirects: updatedRedirects, Name: updatedName };
+
+                        if (key123?.[index]?.api_key) {
+
+                            history.pushState(null, "", `/panel/apikey?page=manage_key&action=save&statu=fetchingMAJ&index=${index}`);
+
+                            try {
+
+                                const response = await fetch(`/panel/apikey/key/maj/${key123[index].api_key}`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(fetch_body)
+                                });
+
+                                const data = await response.json();
+                                if (data.error) {
+                                    history.pushState(null, "", `/panel/apikey?page=manage_key&action=save&statu=error&index=${index}`);
+                                    return salert('SilverAuth', data.message.silver, 'error');
+                                }
+                                history.pushState(null, "", `/panel/apikey?page=manage_key&action=save&statu=success&index=${index}`);
+                                salert('SilverAuth', '', 'success');
+
+                            } catch (error) {
+
+                                console.error('Erreur lors de la requête :', error);
+                                history.pushState(null, "", `/panel/apikey?page=manage_key&action=save&statu=error&index=${index}`);
+                                return salert('SilverAuth', 'Erreur lors de la requête', 'error');
+
+                            }
+
+
+                        } else {
+                            console.error('Clé API introuvable pour l’index donné.');
+                            history.pushState(null, "", `/panel/apikey?page=manage_key&statu=error&index=${index}`);
+                            return salert('SilverAuth', 'Une erreur est survenue', 'error');
+                        };
+
+
+                        updateApiKeyTable(apiKeys);
+
+                        setTimeout(() => {
+                            
+                            $('#manageApiKeyModal').modal('hide');
+                            history.pushState(null, "", `/panel/apikey`);
+                            window.location.reload();
+
+                        }, 1000);
+
+                    } else {
+
+                        salert('SilverAuth', 'Veuillez remplir le champ Nom de l\'organisation.', 'warning');
+                        return history.pushState(null, "", `/panel/apikey?page=manage_key&statu=error&index=${index}`);
+
+                    }
+                });
+            })
+            .catch(error => console.error('Erreur lors de la récupération des données des clés API:', error));
+    });
+</script>
+ 
+
+
+
+
+
+
+
+
+<div class="content-wrapper col-md-12 ml-0">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Gestion des Clés API</h1>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <!-- Table des Clés API -->
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Liste des Clés API</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addApiKeyModal">
-                                            Ajouter une Clé API
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Organisation Name</th>
-                                                <th>Clé API</th>
-                                                <th>Creat At</th>
-                                                <th>Expire At</th>
-                                                <th>daily request limit</th>
-                                                <th>allowed domains</th>
-                                                <th>redirect urls</th>
-                                                <th>ID</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="apiKeyTableBody">
-                                            <!-- Les clés API seront affichées ici -->
-                                        </tbody>
-                                    </table>
-                                </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Liste des Clés API</h3>
+                            <div class="card-tools">
+
+                                <button type="button" class="btn btn-success" id="addAPIKEYbtn">
+                                    Ajouter une Clé API
+                                </button>                              
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Organisation Name</th>
+                                            <th>Clé API</th>
+                                            <th>Créée Le</th>
+                                            <th>Expire Le</th>
+                                            <th>Limite Requête Quotidienne</th>
+                                            <th>ID</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="apiKeyTableBody"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Modal Ajouter Clé API -->
-            <div class="modal fade" id="addApiKeyModal" tabindex="-1" role="dialog" aria-labelledby="addApiKeyModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addApiKeyModalLabel">Ajouter une Clé API</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addApiKeyForm">
-                                <div class="form-group">
-                                    <label for="apiKeyName">Nom de la Clé API</label>
-                                    <input type="text" class="form-control" id="apiKeyName" placeholder="Nom de la clé">
-                                </div>
-                                <div class="form-group">
-                                    <label for="apiKey">Clé API</label>
-                                    <input type="text" class="form-control" id="apiKey" placeholder="Clé API">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                            <button type="button" class="btn btn-primary" id="saveApiKey">Sauvegarder</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 
 
-    <script>
-        fetch('/panel/apikey/data').then(res => res.json())
-        .then(res => {
+    <!-- Modal pour ajouter une clé API -->
+    <div class="modal fade" id="addApiKeyModal" tabindex="-1" aria-labelledby="addApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addApiKeyModalLabel">Ajouter une Clé API</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addApiKeyForm">
+                        <div class="mb-3">
+                            <label for="apiKeyName" class="form-label">Nom de l'organisation</label>
+                            <input type="text" class="form-control" id="apiKeyName" placeholder="Ex: Mon Organisation">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="closeApiKey" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="saveApiKey">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            const apiKeys = res;
-        
-            function updateApiKeyTable() {
-                const tableBody = document.getElementById('apiKeyTableBody');
-                tableBody.innerHTML = ''; // Vide le corps de la table
-        
-                // Parcourt chaque clé API pour l'ajouter à la table
-                apiKeys.forEach((key, index) => {
-                    const row = document.createElement('tr'); // Crée une nouvelle ligne de tableau
-                    row.innerHTML = `
-                        <td>${key.organisationName}</td>
-                        <td>${key.apiKey}</td>
-                        <td>${key.createdAt}</td>
-                        <td>${key.expireAt}</td>
-                        <td>${key.dailyRequestLimit}</td>
-                        <td>${key.allowedDomains}</td>
-                        <td>${key.redirectUrls}</td>
-                        <td>${key.id}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm" onclick="openmanager(${index})">Manage key</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row); // Ajoute la ligne à la table
-                });
-            }
-        
-            function deleteApiKey(index) {
-                // Supprime la clé API du tableau
-                apiKeys.splice(index, 1);
-                updateApiKeyTable(); // Mise à jour de la table
-            }
-        
-            document.getElementById('saveApiKey').addEventListener('click', function () {
-                // Récupère les valeurs du formulaire
-                const organisationName = document.getElementById('organisationName').value;
-                const apiKey = document.getElementById('apiKey').value;
-                const createdAt = document.getElementById('createdAt').value;
-                const expireAt = document.getElementById('expireAt').value;
-                const dailyRequestLimit = document.getElementById('dailyRequestLimit').value;
-                const allowedDomains = document.getElementById('allowedDomains').value;
-                const redirectUrls = document.getElementById('redirectUrls').value;
-        
-                // Vérifie si toutes les informations sont remplies
-                if (organisationName && apiKey && createdAt && expireAt && dailyRequestLimit && allowedDomains && redirectUrls) {
-                    apiKeys.push({
-                        organisationName, 
-                        apiKey, 
-                        createdAt, 
-                        expireAt, 
-                        dailyRequestLimit, 
-                        allowedDomains, 
-                        redirectUrls
-                    });
-        
-                    updateApiKeyTable(); // Met à jour la table après l'ajout
-                    $('#addApiKeyModal').modal('hide'); // Ferme le modal après l'ajout
-                } else {
-                    alert('Veuillez remplir tous les champs.');
-                }
-            });
-        
-            $(document).ready(function () {
-                updateApiKeyTable(); // Affiche les clés API dès que la page est prête
-            });
 
-        });
 
-    </script>
+    <!-- Modal de gestion des Clés API -->
+    <div class="modal fade" id="manageApiKeyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gérer la Clé API</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="manageApiKeyForm">
+                        <div class="form-group">
+                            <label>Nom de l'organisation</label>
+                            <input type="text" class="form-control" id="manageApiKeyName">
+                        </div>
+                        <div class="form-group">
+                            <label>Clé API</label>
+                            <input type="text" class="form-control" id="manageApiKey" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Domaines associés</label>
+                            <div id="domainList"></div>
+                            <button class="btn btn-success" type="button" id="addDomain">➕ Ajouter</button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Liens de redirection</label>
+                            <div id="redirectList"></div>
+                            <button class="btn btn-success" type="button" id="addRedirect">➕ Ajouter</button>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="history.pushState(null, '', `/panel/apikey`)" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="updateApiKey">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script defer>
+
+    const btn = document.getElementById('addAPIKEYbtn');
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    const orgName = urlParams.get('orgName')
+
+    if (page === 'create_key') {
+
+        const name = document.getElementById('apiKeyName');
+        name.value = orgName;
+        const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
+        modal.show();
+
+    }
+
+
+    document.getElementById('closeApiKey').addEventListener('click', () => {
+        history.pushState(null, "", `/panel/apikey`);
+        const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
+        window.location.reload();
+    })
+
+    btn.addEventListener('click', () => {
+
+        history.pushState(null, "", `/panel/apikey?page=create_key`);
+        const name = document.getElementById('apiKeyName');
+        name.value = orgName;
+        const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
+        modal.show();
     
+    });
+
+    // Gérer la sauvegarde de la clé API (ajouter l'implémentation backend ici)
+    document.getElementById('saveApiKey').addEventListener('click', () => {
+
+        const name = document.getElementById('apiKeyName').value.trim();
+
+        if (!name) {
+            alert("Le nom de l'organisation est obligatoire.");
+            return;
+        }
+
+        const newApiKey = {
+            name: name,
+        };
+
+        console.log("Nouvelle clé API à envoyer :", newApiKey);
+
+        // Ici, tu peux ajouter une requête `fetch` pour envoyer ces données au serveur
+    });
+
+
+    document.getElementById('apiKeyName').addEventListener('change', () => {
+        history.pushState(null, "", `/panel/apikey?page=create_key&orgName=${document.getElementById('apiKeyName').value}`);
+    })
+    
+</script>

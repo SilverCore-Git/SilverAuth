@@ -200,6 +200,72 @@ class APIKeyManager {
     }
 
 
+
+    async update(apiKey, updates) {
+        let conn;
+        try {
+            // Connexion à la base de données
+            conn = await connection.getConnection();
+    
+            // Vérification si la clé API existe
+            const [existingKey] = await conn.query(
+                'SELECT * FROM apikey WHERE api_key = ?',
+                [apiKey]
+            );
+    
+            if (existingKey.length === 0) {
+                return { error: true, message: 'Clé API introuvable.' };
+            }
+    
+            // Création dynamique de la requête SQL de mise à jour
+            const fieldsToUpdate = [];
+            const values = [];
+    
+            if (updates.organizationName) {
+                fieldsToUpdate.push('organization_name = ?');
+                values.push(updates.organizationName);
+            }
+            if (updates.allowedDomains) {
+                fieldsToUpdate.push('allowed_domains = ?');
+                values.push(JSON.stringify(updates.allowedDomains));
+            }
+            if (updates.redirectUrls) {
+                fieldsToUpdate.push('redirect_urls = ?');
+                values.push(JSON.stringify(updates.redirectUrls));
+            }
+            if (updates.dataplus) {
+                fieldsToUpdate.push('dataplus = ?');
+                values.push(JSON.stringify(updates.dataplus));
+            }
+    
+            // Si aucun champ n'est à mettre à jour, retourner une erreur
+            if (fieldsToUpdate.length === 0) {
+                return { error: true, message: 'Aucune donnée à mettre à jour.' };
+            }
+    
+            // Construction de la requête SQL
+            const query = `UPDATE apikey SET ${fieldsToUpdate.join(', ')} WHERE api_key = ?`;
+            values.push(apiKey);
+    
+            // Exécution de la mise à jour
+            const result = await conn.query(query, values);
+    
+            if (result.affectedRows === 0) {
+                return { error: true, message: 'Aucune mise à jour effectuée.' };
+            }
+    
+            return { success: true, message: `Clé API ${apiKey} mise à jour avec succès.`, affectedRows: result.affectedRows };
+    
+        } catch (err) {
+            console.error('❌ Erreur lors de la mise à jour de la clé API:', err.message || err);
+            return { error: true, message: err.message || err };
+        } finally {
+            if (conn) conn.release();
+        }
+    }
+    
+
+
 };
 
 module.exports = new APIKeyManager();

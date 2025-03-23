@@ -1,0 +1,163 @@
+<!-- Content Wrapper -->
+<div class="content-wrapper col-md-12 ml-0">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Gestion des Clés API</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Table des Clés API -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Liste des Clés API</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addApiKeyModal">
+                                    Ajouter une Clé API
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Organisation Name</th>
+                                            <th>Clé API</th>
+                                            <th>Créée Le</th>
+                                            <th>Expire Le</th>
+                                            <th>Limite Requête Quotidienne</th>
+                                            <th>ID</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="apiKeyTableBody">
+                                        <!-- Les clés API seront affichées ici -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gérer Clé API -->
+    <div class="modal fade" id="manageApiKeyModal" tabindex="-1" role="dialog" aria-labelledby="manageApiKeyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageApiKeyModalLabel">Gérer la Clé API</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="manageApiKeyForm">
+                        <div class="form-group">
+                            <label for="manageApiKeyName">Nom de la Clé API</label>
+                            <input type="text" class="form-control" id="manageApiKeyName" placeholder="Nom de la clé">
+                        </div>
+                        <div class="form-group">
+                            <label for="manageApiKey">Clé API</label>
+                            <input type="text" class="form-control" id="manageApiKey" placeholder="Clé API" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="manageExpireAt">Expire Le</label>
+                            <input type="datetime-local" class="form-control" id="manageExpireAt">
+                        </div>
+                        <div class="form-group">
+                            <label for="manageDailyRequestLimit">Limite Requête Quotidienne</label>
+                            <input type="number" class="form-control" id="manageDailyRequestLimit">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="updateApiKey">Sauvegarder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour gérer les clés API -->
+<script>
+    fetch('/panel/apikey/data').then(res => res.json())
+    .then(res => {
+
+        const apiKeys = res;
+    
+        function updateApiKeyTable() {
+            const tableBody = document.getElementById('apiKeyTableBody');
+            tableBody.innerHTML = ''; // Vide le corps de la table
+
+            // Parcourt chaque clé API pour l'ajouter à la table
+            apiKeys.forEach((key, index) => {
+                const row = document.createElement('tr'); // Crée une nouvelle ligne de tableau
+                row.innerHTML = `
+                    <td>${key.organization_name}</td>
+                    <td><input type="url" value="${key.api_key}" readonly></td>
+                    <td>${key.created_at}</td>
+                    <td>${key.expires_at}</td>
+                    <td>${key.daily_request_limit}</td>
+                    <td>${key.id}</td>
+                    <td>
+                        <a href="/panel/apikey?d=key_manager&index=${index}"><button class="btn btn-primary btn-sm"">Gérer</button></a>
+                    </td>
+                `;
+                tableBody.appendChild(row); // Ajoute la ligne à la table
+            });
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const d = urlParams.get('d');
+        const index = urlParams.get('index');
+        if (d === 'key_manager') {
+            openManager(index);
+        };
+
+        function openManager(index) {
+            const key = apiKeys[index];
+            document.getElementById('manageApiKeyName').value = key.organization_name;
+            document.getElementById('manageApiKey').value = key.api_key;
+            document.getElementById('manageExpireAt').value = key.expires_at;
+            document.getElementById('manageDailyRequestLimit').value = key.daily_request_limit;
+            $('#manageApiKeyModal').modal('show'); // Ouvre le modal
+        }
+
+
+        // Fonction qui permet de mettre à jour la clé API
+        document.getElementById('updateApiKey').addEventListener('click', function () {
+            const updatedName = document.getElementById('manageApiKeyName').value;
+            const updatedExpireAt = document.getElementById('manageExpireAt').value;
+            const updatedRequestLimit = document.getElementById('manageDailyRequestLimit').value;
+    
+            // Vérifie si tous les champs sont remplis
+            if (updatedName && updatedExpireAt && updatedRequestLimit) {
+                const key = apiKeys.find(k => k.api_key === document.getElementById('manageApiKey').value);
+                key.organization_name = updatedName;
+                key.expires_at = updatedExpireAt;
+                key.daily_request_limit = updatedRequestLimit;
+
+                updateApiKeyTable(); // Met à jour la table après l'édition
+                $('#manageApiKeyModal').modal('hide'); // Ferme le modal
+            } else {
+                alert('Veuillez remplir tous les champs.');
+            }
+        });
+    
+        $(document).ready(function () {
+            updateApiKeyTable(); // Affiche les clés API dès que la page est prête
+        });
+
+    });
+</script>
