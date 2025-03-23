@@ -86,39 +86,43 @@ class APIKeyManager {
     }
     
 
-
     async delete(apiKey) {
-
         let conn;
         try {
-
             // Connexion à la base de données
             conn = await connection.getConnection();
-
+    
+            // Vérification de l'existence de la clé API
+            const checkExistence = await conn.query(
+                'SELECT COUNT(*) AS count FROM apikey WHERE api_key = ?',
+                [apiKey]
+            );
+    
+            if (checkExistence[0].count === 0) {
+                return { error: true, message: 'Aucune clé API trouvée à supprimer.' };
+            }
+    
             // Suppression de la clé API
             const result = await conn.query(
                 'DELETE FROM apikey WHERE api_key = ?',
                 [apiKey]
             );
-
+    
             if (result.affectedRows === 0) {
-                return { error: true, message: 'Aucune clé API trouvée à supprimer.' }
+                return { error: true, message: 'Aucune clé API trouvée à supprimer.' };
             }
-
-            console.log(`✅ Clé API ${apiKey} supprimée avec succès.`);
+    
             return { message: `Clé API ${apiKey} supprimée avec succès.`, affectedRows: result.affectedRows };
-
+    
         } catch (err) {
-
             console.error('❌ Erreur lors de la suppression de la clé API:', err.message || err);
-            return { error: true, message: err.message || err };
-
+            return { error: true, message: err.message || 'Erreur serveur lors de la suppression.' };
         } finally {
-
-            if (conn) conn.release();
-
+            if (conn) conn.release(); // Toujours libérer la connexion à la base de données
         }
     }
+    
+    
 
 
     async info(apiKey) {

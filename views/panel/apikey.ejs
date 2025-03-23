@@ -110,6 +110,43 @@
                 document.getElementById('addDomain').addEventListener('click', () => addDomainField());
                 document.getElementById('addRedirect').addEventListener('click', () => addRedirectField());
 
+                document.getElementById('deleteBTN').addEventListener('click', async () => {
+                    const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer cette clé API ?");
+
+                    if (confirmation) {
+
+                        await fetch(`/panel/apikey/key/remove/${key123?.[index]?.api_key}`, { method: 'POST' })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.error) {
+                                salert('SilverAuth', res.message.silver, 'error');
+                                $('#manageApiKeyModal').modal('hide');
+                                history.pushState(null, "", `/panel/apikey`);
+                            }
+                            else {
+
+                                salert('SilverAuth', res.message.silver, 'success');
+
+                                $('#manageApiKeyModal').modal('hide');
+                                history.pushState(null, "", `/panel/apikey`);
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 500);
+                                
+                            };
+                        })
+                        .catch(err => {
+                            salert('SilverAuth', 'Une erreur est survenue', 'error');
+                            console.error('Une erreur est survenue : ', err);
+                            $('#manageApiKeyModal').modal('hide');
+                            history.pushState(null, "", `/panel/apikey`);
+
+                        });
+
+                    }
+
+                })
+
                 // Sauvegarder les modifications de la clé API
                 document.getElementById('updateApiKey').addEventListener('click', async () => {
 
@@ -307,8 +344,11 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="history.pushState(null, '', `/panel/apikey`)" data-dismiss="modal">Fermer</button>
+                    
+                    <button type="button" class="btn btn-danger" id="deleteBTN">Supprimer la clé</button>
                     <button type="button" class="btn btn-primary" id="updateApiKey">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary" onclick="history.pushState(null, '', `/panel/apikey`)" data-dismiss="modal">Fermer</button>
+
                 </div>
             </div>
         </div>
@@ -383,7 +423,7 @@
                 const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
                 modal.hide(); // Ferme le modal après l'ajout
                 history.pushState(null, "", `/panel/apikey`);
-                
+
                 setTimeout(() => {
                     window.location.reload();
                 }, 500);

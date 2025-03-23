@@ -14,6 +14,7 @@ const router = express.Router();
 const Token = require('../src/token.js');
 const config = require('../config.json');
 const apikey = require('../src/database/apikey.js');
+const deleteAPIKEY = apikey.delete;
 
 router.use(expressLayouts);
 
@@ -196,7 +197,7 @@ router.post('/apikey/key/add', async (req, res) => {
         return res.status(401).json({ error: true, message: { silver: "Token invalide" } });
     }
 
-    apikey.create(tokenResp.data.usr_info.userId, organisationName ).then(resp => {
+    await apikey.create(tokenResp.data.usr_info.userId, organisationName ).then(resp => {
 
       if (resp.error) {
         return res.status(400).json({ error: true, message: { silver: 'Une erreur est survenue', server: resp.message }, data: resp });
@@ -216,6 +217,46 @@ router.post('/apikey/key/add', async (req, res) => {
   }
 
 })
+
+router.post('/apikey/key/remove/:key', async (req, res) => {
+
+  try {
+
+    const apikey = req.params.key;
+    const token = req.cookies.silvertoken;
+
+    // Vérification du domaine
+    if (req.hostname !== config.hostname) {
+        return res.status(403).json({ error: true, message: { silver: "Accès refusé" } });
+    }
+
+    // Vérification du token
+    const tokenResp = await Token.verify(token);
+    if (!tokenResp.valid) {
+        return res.status(401).json({ error: true, message: { silver: "Token invalide" } });
+    }
+
+    // Appel à la méthode delete
+    const resp = await deleteAPIKEY(apikey);
+
+
+    if (resp.error) {
+      return res.status(400).json({ error: true, message: { silver: 'Une erreur est survenue', server: resp.message }, data: resp });
+    }
+
+    // Si la suppression est réussie
+    return res.status(200).json({ message: resp.message, data: resp });
+
+  } catch (error) {
+
+    // Gestion d'erreur serveur
+    console.error('Erreur lors de la suppression de la clé API:', error);
+    return res.status(500).json({ error: true, message: { silver: "Erreur serveur" } });
+
+  }
+
+});
+
 
 
 
