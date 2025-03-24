@@ -106,6 +106,43 @@ class Account {
             if (conn) conn.release();
         }
     }
+
+
+    
+    async GetAccounts(id) {
+        
+        let conn;
+        try {
+            // Connexion à la base de données
+            conn = await connection.getConnection();
+    
+            if (id === 'ADMIN') {
+                const result = await conn.query(
+                    'SELECT * FROM account'
+                );
+                return result
+            }
+            else {
+                const result = await conn.query(
+                    'SELECT * FROM account WHERE id = ?', 
+                    [id]
+                );
+                return result
+            }
+
+    
+
+    
+        } catch (err) {
+            return { error: true, message: err.message || err };
+    
+        } finally {
+            // Libération de la connexion à la base de données
+            if (conn) conn.release();
+        }
+    }
+
+
 }
 
 module.exports = new Account();

@@ -1,0 +1,215 @@
+<script type="module" defer>
+    import salert from 'https://corsproxy.io/https://api.silverdium.fr/salert/salert.js';
+
+    document.addEventListener("DOMContentLoaded", function () {
+    fetch('/panel/users/data/')
+        .then(res => res.json())
+        .then(users => {
+            // Fonction pour mettre à jour la table des utilisateurs admin
+            function updateAdminTable(users) {
+                const tableBody = document.getElementById('adminTableBody');
+                tableBody.innerHTML = '';
+
+                users.forEach((user) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.pseudo}</td>
+                        <td>${user.email}</td>
+                        <td>${user.created_at}</td>
+                        <td>${user.dataplus.ip}</td>
+                        <td>${user.dataplus.role}</td>
+                        <td>
+                            <a href="/panel/admin/users?page=manage_user&id=${user.id}">
+                                <button class="btn btn-primary btn-sm">Gérer</button>
+                            </a>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            updateAdminTable(users);
+        })
+        .catch(error => console.error("Erreur lors de la récupération des admins :", error));
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page');
+    const userId = urlParams.get('id'); // Correction de "userid" à "userId"
+
+    if (page === 'manage_user' && userId) {
+        // Charge les données de l'utilisateur
+        loadUserData(userId);
+
+        // Ouvre le modal si l'utilisateur existe
+        $('#userModal').modal('show'); // Ouvre le modal
+    }
+
+    // Fonction pour charger les données de l'utilisateur dans le modal
+    function loadUserData(userId) {
+        fetch(`/panel/users/data/${userId}`)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Erreur lors de la récupération des données utilisateur.');
+                }
+                return res.json();
+            })
+            .then(user => {
+                document.getElementById('username').value = user.pseudo;
+                document.getElementById('email').value = user.email;
+                document.getElementById('created_at').value = user.created_at;
+                document.getElementById('userId').value = user.id; // Stocke l'ID utilisateur pour soumission
+                // document.getElementById('ip').value = user.dataplus.ip;
+                // document.getElementById('role').value = user.dataplus.role;
+            })
+            .catch(error => {
+                salert('Erreur', error.message, 'error');
+            });
+    }
+
+    // Action pour soumettre le formulaire de gestion d'utilisateur
+    document.getElementById('manageUserForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const userId = document.getElementById('userId').value;
+        const role = document.getElementById('role').value;
+        const password = document.getElementById('password').value;
+        const note = document.getElementById('note').value;
+
+        // Validation basique
+        if (!role || !password || !note) {
+            salert('Erreur', 'Tous les champs doivent être remplis.', 'error');
+            return;
+        }
+
+        fetch(`/panel/users/update/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                role,
+                password,
+                note
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            salert('Success', 'Utilisateur mis à jour avec succès!', 'success');
+            $('#userModal').modal('hide'); // Fermer le modal après succès
+        })
+        .catch(error => {
+            salert('Erreur', 'Une erreur est survenue lors de la mise à jour de l\'utilisateur.', 'error');
+        });
+    });
+
+    // Action pour bannir l'utilisateur
+    document.getElementById('banUser').addEventListener('click', function () {
+        const userId = document.getElementById('userId').value;
+        if (confirm("Êtes-vous sûr de vouloir bannir cet utilisateur ?")) {
+            fetch(`/panel/users/ban/${userId}`, {
+                method: 'POST',
+            })
+                .then(res => res.json())
+                .then(data => {
+                    salert('Success', 'Utilisateur banni avec succès!', 'success');
+                    $('#userModal').modal('hide'); // Fermer le modal après bannissement
+                })
+                .catch(error => {
+                    salert('Erreur', 'Une erreur est survenue lors du bannissement de l\'utilisateur.', 'error');
+                });
+        }
+    });
+});
+
+</script>
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Gestion de l'utilisateur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="manageUserForm">
+                    <input type="hidden" id="userId"> <!-- Champ caché pour l'ID utilisateur -->
+
+                    <div class="form-group">
+                        <label for="username">Pseudo</label>
+                        <input type="text" class="form-control" id="username" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="created_at">Date de création</label>
+                        <input type="text" class="form-control" id="created_at" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="ip">Adresse IP</label>
+                        <input type="text" class="form-control" id="ip" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Grade</label>
+                        <select class="form-control" id="role">
+                            <option value="user">Utilisateur</option>
+                            <option value="moderator">Modérateur</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Note</label>
+                        <input type="number" class="form-control" id="note" min="0" max="10">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Mettre à jour</button>
+                        <button type="button" class="btn btn-danger" id="banUser">Bannir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content-wrapper mt-12 col-md-12 ml-0">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users"></i> Liste des utilisateurs</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Pseudo</th>
+                            <th>Email</th>
+                            <th>Date de création</th>
+                            <th>ip</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Données insérées dynamiquement -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

@@ -165,29 +165,24 @@ class APIKeyManager {
             // Connexion à la base de données
             conn = await connection.getConnection();
     
-            // Requête pour récupérer toutes les clés API pour un utilisateur donné (par son ID)
-            const result = await conn.query(
-                'SELECT * FROM apikey WHERE account_id = ?',
-                [userId]
-            );
-    
-            return result;
+            if (userId === 'ADMIN') {
+                const result = await conn.query(
+                    'SELECT * FROM apikey'
+                );
+                return result
+            }
+            else {
 
-            // Vérification si le résultat est un objet
-            if (!isObject(result)) {
-                return {data: result};
+                const result = await conn.query(
+                    'SELECT * FROM apikey WHERE account_id = ?',
+                    [userId]
+                );
+
+                return result;
+
             }
     
-            const rows = result[0];  // On accède au tableau de résultats
 
-    
-            // Si aucune clé API n'est trouvée pour cet utilisateur
-            if (!rows || rows.length === 0) {
-                return { error: true, message: 'Aucune clé API trouvée pour cet utilisateur.' };
-            }
-    
-            // Si des clés API sont trouvées, les retourner dans le champ 'data'
-            return { status: 'success', data: rows };
     
         } catch (err) {
             // Gestion des erreurs

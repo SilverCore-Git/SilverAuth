@@ -14,6 +14,7 @@ const router = express.Router();
 const Token = require('../src/token.js');
 const config = require('../config.json');
 const apikey = require('../src/database/apikey.js');
+const account = require('../src/database/account.js');
 const deleteAPIKEY = apikey.delete;
 
 router.use(expressLayouts);
@@ -63,9 +64,23 @@ router.get('/', async (req, res) => {
 
   });
   
-router.get('/users', (req, res) => {
-  res.render('panel/users');
+
+
+router.get('/admin/users', (req, res) => {
+  res.render('panel/admin/users');
 });
+
+router.get('/admin/apikey', (req, res) => {
+  res.render('panel/admin/apikey');
+});
+
+router.get('/admin', (req, res) => {
+  res.render('panel/admin/admin');
+});
+
+
+
+
 
 router.get('/apikey', async (req, res) => {
 
@@ -113,9 +128,94 @@ router.get('/apikey/data', async (req, res) => {
 })
 
 
-router.get('/settings', (req, res) => {
-  res.render('panel/settings');
-});
+router.get('/apikey/data/admin', async (req, res) => {
+
+  const token = req.cookies.silvertoken;
+
+  await Token.verify(token).then(async (resp) => {
+
+    if (resp.valid === true) {
+
+      if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+
+        await apikey.GetKeys(resp.data.usr_info.dataplus.role).then(respd => {
+
+          res.json(respd);
+  
+        })
+
+      }
+
+    }
+
+    else {
+     return { error: true, message: 'Session invalide' }
+    }
+
+  })
+
+})
+
+
+router.get('/users/data/', async (req, res) => {
+
+  const token = req.cookies.silvertoken;
+
+  await Token.verify(token).then(async (resp) => {
+
+    if (resp.valid === true) {
+
+      if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+
+        await account.GetAccounts('ADMIN').then(respd => {
+
+          res.json(respd);
+  
+        })
+
+      }
+
+    }
+
+    else {
+     return { error: true, message: 'Session invalide' }
+    }
+
+  })
+
+})
+
+
+
+router.get('/users/data/:id', async (req, res) => {
+
+  const id = req.params.id;
+  const token = req.cookies.silvertoken;
+
+  await Token.verify(token).then(async (resp) => {
+
+    if (resp.valid === true) {
+
+      if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+
+        await account.GetAccounts(id).then(respd => {
+
+          res.json(respd);
+  
+        })
+
+      }
+
+    }
+
+    else {
+     return { error: true, message: 'Session invalide' }
+    }
+
+  })
+
+})
+
 
 
 
