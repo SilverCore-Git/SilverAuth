@@ -55,12 +55,30 @@
                 return res.json();
             })
             .then(user => {
-                document.getElementById('username').value = user.pseudo;
-                document.getElementById('email').value = user.email;
-                document.getElementById('created_at').value = user.created_at;
-                document.getElementById('userId').value = user.id; // Stocke l'ID utilisateur pour soumission
-                // document.getElementById('ip').value = user.dataplus.ip;
-                // document.getElementById('role').value = user.dataplus.role;
+
+                const date = new Date(user?.[0].created_at);
+
+                // Formatage de la date dans un format plus lisible
+                const options = {
+                weekday: 'long', // Jour de la semaine
+                year: 'numeric', // Année
+                month: 'long', // Mois
+                day: 'numeric', // Jour du mois
+                hour: '2-digit', // Heure
+                minute: '2-digit', // Minute
+                second: '2-digit', // Seconde
+                timeZoneName: 'short' // Fuseau horaire
+                };
+
+                const readableDate = date.toLocaleString('fr-FR', options);
+
+                document.getElementById('username').value = user?.[0].pseudo;
+                document.getElementById('email').value = user?.[0].email;
+                document.getElementById('created_at').value = readableDate;
+                document.getElementById('userId').value = user?.[0].id;
+                document.getElementById('ip').value = user?.[0].dataplus.ip;
+                document.getElementById('role').value = user?.[0].dataplus.role;
+
             })
             .catch(error => {
                 salert('Erreur', error.message, 'error');
@@ -163,9 +181,9 @@
                     <div class="form-group">
                         <label for="role">Grade</label>
                         <select class="form-control" id="role">
-                            <option value="user">Utilisateur</option>
-                            <option value="moderator">Modérateur</option>
-                            <option value="admin">Administrateur</option>
+                            <option value="USER">Utilisateur</option>
+                            <option value="MODO">Modérateur</option>
+                            <option value="ADMIN">Administrateur</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -185,6 +203,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 <section class="content-wrapper mt-12 col-md-12 ml-0">
     <div class="container-fluid">

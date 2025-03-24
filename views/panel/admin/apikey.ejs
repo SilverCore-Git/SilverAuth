@@ -6,7 +6,7 @@
         fetch('/panel/apikey/data/admin')
             .then(res => res.json())
             .then(apiKeys => {
-                // Utilisation de apiKeys directement dans le contexte du .then()
+
                 updateApiKeyTable(apiKeys);
 
                 const urlParams = new URLSearchParams(window.location.search);
@@ -14,7 +14,7 @@
                 const index = urlParams.get('index');
 
                 if (page === 'manage_key' && index !== null && apiKeys[index]) {
-                    setTimeout(() => openManager(apiKeys, index), 100); // Assurer que le DOM est prêt
+                    setTimeout(() => openManager(apiKeys, index), 100);
                 }
 
                 // Fonction pour ouvrir le modal de gestion d'une clé API

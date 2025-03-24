@@ -186,6 +186,37 @@ router.get('/users/data/', async (req, res) => {
 })
 
 
+router.get('/users/update/:usrid', async (req, res) => { // voir la root
+
+  const usrID = req.params.usrid;
+  const token = req.cookies.silvertoken;
+
+  await Token.verify(token).then(async (resp) => {
+
+    if (resp.valid === true) {
+
+      if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+
+        await account.GetAccounts('ADMIN').then(respd => {
+
+          res.json(respd);
+  
+        })
+
+      }
+
+    }
+
+    else {
+     return { error: true, message: 'Session invalide' }
+    }
+
+  })
+
+})
+
+
+
 
 router.get('/users/data/:id', async (req, res) => {
 
