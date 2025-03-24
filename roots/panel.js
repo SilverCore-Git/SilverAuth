@@ -186,7 +186,7 @@ router.get('/users/data/', async (req, res) => {
 })
 
 
-router.get('/users/update/:usrid', async (req, res) => { // voir la root
+router.get('/users/update/:usrid', async (req, res) => { // voir la root + ajouter verification de toutes les roots intern et ajouter vérification de domaine
 
   const usrID = req.params.usrid;
   const token = req.cookies.silvertoken;
