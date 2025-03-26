@@ -15,6 +15,7 @@ const Token = require('../src/token.js');
 const config = require('../config.json');
 const apikey = require('../src/database/apikey.js');
 const account = require('../src/database/account.js');
+const update = require('../src/database/maj.js');
 const deleteAPIKEY = apikey.delete;
 
 router.use(expressLayouts);
@@ -239,11 +240,12 @@ router.get('/users/data/', async (req, res) => {
 })
 
 
-router.get('/users/update/:usrid', async (req, res) => { // voir la root + ajouter verification de toutes les roots intern et ajouter vérification de domaine
+router.post('/user/admin/update/:mail', async (req, res) => {
 
   if (req.hostname === config.hostname) {
 
-    const usrID = req.params.usrid;
+    const mail = req.params.mail;
+    const { role, password, note } = req.body;
     const token = req.cookies.silvertoken;
 
     await Token.verify(token).then(async (resp) => {
@@ -252,11 +254,32 @@ router.get('/users/update/:usrid', async (req, res) => { // voir la root + ajout
 
         if (resp.data.usr_info.dataplus.role === 'ADMIN') {
 
-          await account.GetAccounts('ADMIN').then(respd => {
+          
+          await update.Note(mail, note).then(resp => { 
 
-            res.json(respd);
-    
-          })
+            if (resp.error) {
+              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours de la note !', server: resp.message } });
+            } 
+
+          });
+
+          await update.PasswordForAdmin(mail, password).then(resp => { 
+
+            if (resp.error) {
+              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours du mot de passe !', server: resp.message } });
+            } 
+            
+          });
+
+          await update.Role(mail, role).then(resp => { 
+
+            if (resp.error) {
+              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours du role !', server: resp.message } });
+            } 
+            
+          });
+
+          res.status(200).json({ message: 'Information du compte mis a jours !' })
 
         }
 
