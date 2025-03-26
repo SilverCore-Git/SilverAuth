@@ -38,6 +38,40 @@
     const userId = urlParams.get('id');
     const email = urlParams.get('mail');
 
+    document.getElementById('delUser').addEventListener('click', async () =>{
+ 
+        const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce compte ?");
+
+        if (confirmation) {
+
+            await fetch(`/user/delete/my/beautiful/silveraccount/del?email=${email}`)
+            .then(respp => {
+
+                if (respp.error) {
+                    return salert('SilverAuth', respp.message.silver, 'error');
+                }
+
+                else {
+                    salert('SilverAuth', respp.message.silver, 'success');
+                };
+
+                setTimeout(() => {
+                    
+                    history.pushState(null, '', `/panel/admin/users`);
+                    window.location.reload();
+
+                }, 500);                
+
+            })
+            .catch(err => {
+                salert('SilverAuth', 'Une erreur est survenue', 'error');
+                console.error('Erreur lors du fetch : ', err || err.message);
+            })
+
+        }
+
+    })
+
     if (page === 'manage_user' && userId) {
         // Charge les données de l'utilisateur
         loadUserData(userId);
@@ -155,7 +189,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="userModalLabel">Gestion de l'utilisateur</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" onclick="history.pushState(null, '', `/panel/admin/users`)" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -196,8 +230,12 @@
                         <input type="text" class="form-control" id="note" min="0" max="10">
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">Mettre à jour</button>
+
                         <button type="button" class="btn btn-danger" id="banUser">Bannir</button>
+                        <button type="button" class="btn btn-danger" id="delUser">Suprimer</button> 
+                        <button type="submit" class="btn btn-success">Mettre à jour</button>
+                        <button type="button" class="btn btn-secondary" onclick="history.pushState(null, '', `/panel/admin/users`)" data-dismiss="modal">Fermer</button>
+
                     </div>
                 </form>
             </div>

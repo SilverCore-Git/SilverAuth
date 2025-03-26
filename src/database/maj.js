@@ -107,16 +107,17 @@ class Update {
             conn = await connection.getConnection();
     
             const [rows] = await conn.query('SELECT dataplus FROM account WHERE email = ?', [email]);
+
+
+            // if (!rows[0]) {
+            //     return { error: true, message: 'Utilisateur introuvable.' };
+            // }
     
-            if (!rows.length) {
-                return { error: true, message: 'Utilisateur introuvable.' };
-            }
-    
-            let dataplus = rows[0].dataplus ? JSON.parse(rows[0].dataplus) : {};
+            let dataplus = rows;
     
             dataplus.note = newNote;
     
-            const updatedDataplus = JSON.stringify(dataplus);
+            const updatedDataplus = dataplus;
     
             await conn.query('UPDATE account SET dataplus = ? WHERE email = ?', [updatedDataplus, email]);
     
@@ -128,7 +129,7 @@ class Update {
         } finally {
             if (conn) conn.release();
         }
-        
+
     }
     
 
@@ -140,11 +141,12 @@ class Update {
     
             const [rows] = await conn.query('SELECT dataplus FROM account WHERE email = ?', [email]);
     
-            if (!rows.length) {
-                return { error: true, message: 'Utilisateur introuvable.' };
-            }
+            // if (!rows[0]) {
+            //     return { error: true, message: 'Utilisateur introuvable.' };
+            // }
     
-            let dataplus = rows[0].dataplus ? JSON.parse(rows[0].dataplus) : {};
+            let userData = rows[0]; // Récupère le premier élément
+            let dataplus = JSON.parse(userData.dataplus || "{}");
     
             dataplus.role = newRole;
     

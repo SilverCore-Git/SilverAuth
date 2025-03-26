@@ -242,60 +242,50 @@ router.get('/users/data/', async (req, res) => {
 
 router.post('/user/admin/update/:mail', async (req, res) => {
 
-  if (req.hostname === config.hostname) {
+  if (req.hostname !== config.hostname) {
+    return res.send("Vous essayez d'accéder à SilverAuth d'une mauvaise manière !");
+  }
 
-    const mail = req.params.mail;
-    const { role, password, note } = req.body;
-    const token = req.cookies.silvertoken;
+  const mail = req.params.mail;
+  const { role, password, note } = req.body;
+  const token = req.cookies.silvertoken;
 
-    await Token.verify(token).then(async (resp) => {
+  try {
 
-      if (resp.valid === true) {
+    const resp = await Token.verify(token);
 
-        if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+    if (!resp.valid) {
+      return res.status(401).json({ error: true, message: "Session invalide" });
+    }
 
-          
-          await update.Note(mail, note).then(resp => { 
+    if (resp.data.usr_info.dataplus.role !== 'ADMIN') {
+      return res.status(403).json({ error: true, message: "Accès refusé" });
+    }
 
-            if (resp.error) {
-              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours de la note !', server: resp.message } });
-            } 
+    const noteUpdate = await update.Note(mail, note);
+    if (noteUpdate.error) {
+      return res.status(500).json({ error: true, step: 'note', message: { silver: 'Erreur lors de la mise à jour de la note', server: noteUpdate.message } });
+    }
 
-          });
+    const passwordUpdate = await update.PasswordForAdmin(mail, password);
+    if (passwordUpdate.error) {
+      return res.status(500).json({ error: true, step: 'passwd', message: { silver: 'Erreur lors de la mise à jour du mot de passe', server: passwordUpdate.message } });
+    }
 
-          await update.PasswordForAdmin(mail, password).then(resp => { 
+    const roleUpdate = await update.Role(mail, role);
+    if (roleUpdate.error) {
+      return res.status(500).json({ error: true, step: 'role', message: { silver: 'Erreur lors de la mise à jour du rôle', server: roleUpdate.message } });
+    }
 
-            if (resp.error) {
-              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours du mot de passe !', server: resp.message } });
-            } 
-            
-          });
+    return res.status(200).json({ message: 'Informations du compte mises à jour avec succès !' });
 
-          await update.Role(mail, role).then(resp => { 
+  } catch (error) {
+    console.error("❌ Erreur serveur:", error);
+    return res.status(500).json({ error: true, message: "Erreur interne du serveur" });
+  }
 
-            if (resp.error) {
-              return res.status(500).json({ error: true, message: { silver: 'Une erreur est survenue lors de la mise a jours du role !', server: resp.message } });
-            } 
-            
-          });
+});
 
-          res.status(200).json({ message: 'Information du compte mis a jours !' })
-
-        }
-
-      }
-
-      else {
-      return { error: true, message: 'Session invalide' }
-      }
-
-    })
-
-  } else {
-    return res.send('Vous essayer d\'acceder a SilverAuth d\'une mauvaise manière !');
-  };
-
-})
 
 
 
