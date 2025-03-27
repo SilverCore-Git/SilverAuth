@@ -117,7 +117,7 @@ router.get('/redirect', (req, res) => {
 
     if (!token) {
 
-        res.json({ error: true, message: 'Erreur lors de la récupération du token !' });
+        res.redirect('/auth/view/login');
         return
 
     };

@@ -249,7 +249,7 @@ router.get('/view/:action', (req, res) => {
 
 router.get('/get/key/for/register', (req, res) => {
 
-    if (req.hostname === 'localhost') {
+    if (req.hostname === cfg.hostname) {
         if (req.query.d === 'olala') {
             if (req.query.ml === '456') {
                 res.json({ key: process.env.REGISTER_KEY });

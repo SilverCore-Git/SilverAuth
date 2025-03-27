@@ -1,12 +1,8 @@
 {
 
-    "hostname": "localhost",
+    "hostname": "test.silverdium.fr",
 
-    "db": {
-
-        "DefaultFile": "db/default_database.json",
-        "KeyFile": "db/key_database.json"
-
-    }
+    "SSLkeyPath": "/etc/letsencrypt/live/test.silverdium.fr/privkey.pem",
+    "SSLcertPath": "/etc/letsencrypt/live/test.silverdium.fr/fullchain.pem"
 
 }
