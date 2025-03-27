@@ -35,7 +35,7 @@ module.exports = async function AccountConnect(mail, passwd, expiretime = 7*24) 
 
         if (hashedPassword === res.data.password_hash) {
 
-            const token = await Token.create(res.data.id, res.data.pseudo, res.data.email, res.data.created_at, res.data.dataplus)
+            const token = await Token.create(res.data.id, res.data.pseudo, res.data.email, res.data.created_at, res.data.dataplus, res.data.account_grade)
 
             return { message: 'Connexion réussie !', token: token, expiretime: expiretime };
 

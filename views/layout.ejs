@@ -19,6 +19,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.4/sweetalert2.all.min.js" crossorigin="anonymous"></script>
 
 
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const adminItems = document.querySelectorAll('.admin_item');
+    
+            adminItems.forEach(item => item.style.display = "block");
+    
+            fetch('/auth/verify')
+                .then(res => res.json())
+                .then(user => {
+
+                    if (user.data.usr_info.account_grade === 'ADMIN') {
+                        adminItems.forEach(item => item.style.display = "block");
+                    } else {
+                        adminItems.forEach(item => item.style.display = "none");
+                        console.log("L'utilisateur n'est pas un admin");
+                    }
+                })
+                .catch(error => console.error("❌ Erreur lors du chargement de l'utilisateur :", error));
+        });
+
+    </script>
+    
+
     <title>SilverAuth Panel</title>
 
 </head>
@@ -55,21 +79,21 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item admin_item">
                         <a href="/panel/admin" class="nav-link">
                             <i class="nav-icon fa fa-lock"></i>
                             <p>Admin access</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item admin_item">
                         <a href="/panel/admin/users" class="nav-link">
                             <i class="nav-icon fa fa-lock"></i>
                             <p>Users</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item admin_item">
                         <a href="/panel/admin/apikey" class="nav-link">
                             <i class="nav-icon fa fa-lock"></i>
                             <p>Api Key</p>
@@ -92,6 +116,9 @@
 
 </div>
 
+
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/js/adminlte.min.js"></script>
+
+
 </body>
 </html>

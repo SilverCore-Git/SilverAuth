@@ -180,9 +180,9 @@ router.get('/apikey/data/admin', async (req, res) => {
 
       if (resp.valid === true) {
 
-        if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+        if (resp.data.usr_info.account_grade === 'ADMIN') {
 
-          await apikey.GetKeys(resp.data.usr_info.dataplus.role).then(respd => {
+          await apikey.GetKeys(resp.data.usr_info.account_grade).then(respd => {
 
             res.json(respd);
     
@@ -215,7 +215,7 @@ router.get('/users/data/', async (req, res) => {
 
       if (resp.valid === true) {
 
-        if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+        if (resp.data.usr_info.account_grade === 'ADMIN') { 
 
           await account.GetAccounts('ADMIN').then(respd => {
 
@@ -258,7 +258,7 @@ router.post('/user/admin/update/:mail', async (req, res) => {
       return res.status(401).json({ error: true, message: "Session invalide" });
     }
 
-    if (resp.data.usr_info.dataplus.role !== 'ADMIN') {
+    if (resp.data.usr_info.account_grade !== 'ADMIN') {
       return res.status(403).json({ error: true, message: "Accès refusé" });
     }
 
@@ -267,14 +267,16 @@ router.post('/user/admin/update/:mail', async (req, res) => {
       return res.status(500).json({ error: true, step: 'note', message: { silver: 'Erreur lors de la mise à jour de la note', server: noteUpdate.message } });
     }
 
-    const passwordUpdate = await update.PasswordForAdmin(mail, password);
-    if (passwordUpdate.error) {
-      return res.status(500).json({ error: true, step: 'passwd', message: { silver: 'Erreur lors de la mise à jour du mot de passe', server: passwordUpdate.message } });
-    }
-
     const roleUpdate = await update.Role(mail, role);
     if (roleUpdate.error) {
       return res.status(500).json({ error: true, step: 'role', message: { silver: 'Erreur lors de la mise à jour du rôle', server: roleUpdate.message } });
+    }
+
+    if (password) {
+      const passwordUpdate = await update.PasswordForAdmin(mail, password);
+      if (passwordUpdate.error) {
+        return res.status(500).json({ error: true, step: 'passwd', message: { silver: 'Erreur lors de la mise à jour du mot de passe', server: passwordUpdate.message } });
+      }
     }
 
     return res.status(200).json({ message: 'Informations du compte mises à jour avec succès !' });
@@ -301,7 +303,7 @@ router.get('/users/data/:id', async (req, res) => {
 
       if (resp.valid === true) {
 
-        if (resp.data.usr_info.dataplus.role === 'ADMIN') {
+        if (resp.data.usr_info.account_grade === 'ADMIN') {
 
           await account.GetAccounts(id).then(respd => {
 

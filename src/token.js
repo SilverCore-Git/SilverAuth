@@ -13,7 +13,7 @@ var key = process.env.TOKEN_SECRET_KEY;
 class token {
 
 
-    async create(userID, name, mail, createat, dataplus, expiretime = 7*24) {
+    async create(userID, name, mail, createat, dataplus, account_grade, expiretime = 7*24) {
 
         const payload = {
 
@@ -25,6 +25,7 @@ class token {
                 createat: createat,
                 name: name,
                 email: mail,
+                account_grade: account_grade,
                 dataplus: dataplus,
 
                 pp: `${dataplus.url.pp}/${name}`,

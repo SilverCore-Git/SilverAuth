@@ -106,20 +106,14 @@ class Update {
         try {
             conn = await connection.getConnection();
     
-            const [rows] = await conn.query('SELECT dataplus FROM account WHERE email = ?', [email]);
-
 
             // if (!rows[0]) {
             //     return { error: true, message: 'Utilisateur introuvable.' };
             // }
     
-            let dataplus = rows;
+
     
-            dataplus.note = newNote;
-    
-            const updatedDataplus = dataplus;
-    
-            await conn.query('UPDATE account SET dataplus = ? WHERE email = ?', [updatedDataplus, email]);
+            await conn.query('UPDATE account SET note = ? WHERE email = ?', [newNote, email]);
     
             return { message: 'Note mise à jour avec succès.' };
     
@@ -139,20 +133,13 @@ class Update {
         try {
             conn = await connection.getConnection();
     
-            const [rows] = await conn.query('SELECT dataplus FROM account WHERE email = ?', [email]);
-    
+
             // if (!rows[0]) {
             //     return { error: true, message: 'Utilisateur introuvable.' };
             // }
     
-            let userData = rows[0]; // Récupère le premier élément
-            let dataplus = JSON.parse(userData.dataplus || "{}");
-    
-            dataplus.role = newRole;
-    
-            const updatedDataplus = JSON.stringify(dataplus);
-    
-            await conn.query('UPDATE account SET dataplus = ? WHERE email = ?', [updatedDataplus, email]);
+
+            await conn.query('UPDATE account SET account_grade = ? WHERE email = ?', [newRole, email]);
     
             return { message: 'Rôle mis à jour avec succès.' };
     

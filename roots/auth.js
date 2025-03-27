@@ -54,8 +54,6 @@ router.post('/register', async (req, res) => {
 
             ip: ip,
 
-            role: 'USER',
-
             url: {
 
                 skin: { 

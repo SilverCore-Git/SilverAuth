@@ -5,6 +5,7 @@
     fetch('/panel/users/data/')
         .then(res => res.json())
         .then(users => {
+
             // Fonction pour mettre à jour la table des utilisateurs admin
             function updateAdminTable(users) {
                 const tableBody = document.getElementById('adminTableBody');
@@ -18,7 +19,8 @@
                         <td>${user.email}</td>
                         <td>${user.created_at}</td>
                         <td>${user.dataplus.ip}</td>
-                        <td>${user.dataplus.role}</td>
+                        <td>${user.dataplus.banned}</td>
+                        <td>${user.account_grade}</td>
                         <td>
                             <a href="/panel/admin/users?page=manage_user&id=${user.id}&mail=${user.email}">
                                 <button class="btn btn-primary btn-sm">Gérer</button>
@@ -112,7 +114,8 @@
                 document.getElementById('created_at').value = readableDate;
                 document.getElementById('userId').value = user?.[0].id;
                 document.getElementById('ip').value = user?.[0].dataplus.ip;
-                document.getElementById('role').value = user?.[0].dataplus.role;
+                document.getElementById('role').value = user?.[0].account_grade;
+                document.getElementById('note').value = user?.[0].note;
 
             })
             .catch(error => {
@@ -262,6 +265,7 @@
                             <th>Email</th>
                             <th>Date de création</th>
                             <th>ip</th>
+                            <th>Banis ?</th>
                             <th>Grade</th>
                             <th>Actions</th>
                         </tr>
