@@ -384,11 +384,22 @@
 
     // Quand on clique pour ajouter une nouvelle clé API
     btn.addEventListener('click', () => {
-        history.pushState(null, "", `/panel/apikey?page=create_key`);
-        const name = document.getElementById('apiKeyName');
-        name.value = orgName || ''; // Si `orgName` est null, vide le champ
-        const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
-        modal.show();
+        fetch('/panel/apikey/data')
+            .then(res => res.json())
+            .then(apiKeys => {
+                if (apiKeys?.[0]) {
+                    return salert('SilverAuth', 'Vous avez ateint la limite de clé d\'api !', 'warning')
+                } else {
+
+                    history.pushState(null, "", `/panel/apikey?page=create_key`);
+                    const name = document.getElementById('apiKeyName');
+                    name.value = orgName || ''; // Si `orgName` est null, vide le champ
+                    const modal = new bootstrap.Modal(document.getElementById('addApiKeyModal'));
+                    modal.show();
+
+                }
+            })
+        
     });
 
     // Sauvegarder la clé API et envoyer la requête au backend
