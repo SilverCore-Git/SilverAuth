@@ -115,6 +115,10 @@ app.get('/doc', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/doc/index.html'))
 })
 
+app.get('/asset/css/btn', (req, res) => {
+    res.sendFile(path.join(__dirname, 'assets/css/docbtn.css'))
+})
+
 app.get('/user/:go', (req, res) => {
 
     const go = req.params.go;

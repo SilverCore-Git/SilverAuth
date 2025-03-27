@@ -8,8 +8,9 @@
 // Importation des bibliothèques
 const express = require("express");
 const apikey = require('../src/api_key.js');
+const Token = require('../src/token.js');
 const router = express.Router();
-require('dotenv').config();
+require('dotenv').config(); 
 
 
 var tempDatabase = [];
@@ -17,6 +18,7 @@ var tempDatabase = [];
 
 router.get('/auth', async (req, res) => { 
 
+    const token = req.cookies.silvertoken;
     const key = req.query.key;
     const action = req.query.action;         // ?action= peut être login register...
     const redirect = req.query.redirect;     // ?redirect= est l'url vers laquelle l'utilisateur va être rediriger
@@ -26,7 +28,13 @@ router.get('/auth', async (req, res) => {
 
         if (action === 'login') {
 
-            res.status(200).render('login', { redirect: redirect, organisationName: 'dev access' });
+            const verifyToken = await Token.verify(token);
+
+            if (verifyToken.valid) {
+                return res.redirect(`/popup/redirect?url=${redirect}`)
+            }
+
+            res.status(200).render('login', { redirect: redirect, organisationName: 'dev access' }); 
 
         }
 
@@ -46,6 +54,10 @@ router.get('/auth', async (req, res) => {
     } else {
 
         const client = await apikey.verify(key);
+
+        if (client.error) {
+            return res.status(400).json({ error: true, message: 'Clé d\'api non valide !' })
+        }
 
         const allowed_domains = client.data.data.allowed_domains;
         const allowed_redirect = client.data.data.redirect_urls;
