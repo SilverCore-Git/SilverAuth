@@ -26,19 +26,54 @@
             <div class="content">
 
                 <h2 id="intro">Introduction</h2>
-                <p>SilverAuth est un système de gestion de comptes développé par SilverCore, permettant aux utilisateurs de se connecter via "Se connecter avec SilverAuth".</p>
+                <p>SilverAuth est un système de gestion de comptes développé par SilverCore, 
+                    <br>permettant aux utilisateurs de se connecter a une grande quantitée de site web avec un seul compte
+                    <br>le but est de faire une alternative a googleauth.</p>
                 
                 <h2 id="apikey">Clé d'API d'authentification</h2>
-                <p>Une clé d'API est requise pour interagir avec SilverAuth. Vous pouvez la créer et la gérer depuis votre <a href="https://auth.silverdium.fr/panel">panel SilverAuth</a>.</p>
+                <p>Une clé d'API est requise pour interagir avec SilverAuth. Vous pouvez la créer et la gérer depuis votre <a href="/panel" target="_blank">panel SilverAuth</a>.</p>
                 
                 <h3>Création de la clé d'API</h3>
+
                 <ol>
-                    <li>Accédez à votre <a href="https://auth.silverdium.fr/panel">panel SilverAuth</a>.</li>
-                    <li>Dans "Mes clés d'API", cliquez sur "Ajouter une clé API".</li>
+                    <li> Accédez à votre <a href="/panel" target="_blank">panel SilverAuth</a>.</li>
+                    <li>
+                        <span>Dans "Mes clés d'API", cliquez sur "Ajouter une clé API".</span>
+                        <button class="btn-ol" id="view_img_1">Voir le screenshot</button>
+                        <img id="img_1" src="https://api.silverdium.fr/img/transfer/doc/screen/shot1.png">
+                    </li>
                     <li>Entrez les informations de votre organisation.</li>
-                    <li>Configurez les domaines et redirections autorisées.</li>
+                    <li>Clickez sur "gérer" sur la ligne de votre clé d'api.</li>
+                    <li>
+                        <span>Configurez les domaines et redirections autorisées.</span>
+                        <button class="btn-ol" id="view_img_3">Voir le screenshot</button>
+                        <img id="img_3" src="https://api.silverdium.fr/img/transfer/doc/screen/shot3.png">
+                    </li>
                     <li>Cliquez sur "Sauvegarder".</li>
                 </ol>
+
+                <script defer>
+
+                    const btn1 = document.getElementById('view_img_1');
+                    const btn3 = document.getElementById('view_img_3');
+
+                    const img1 = document.getElementById('img_1');
+                    const img3 = document.getElementById('img_3');
+
+                    img1.style.display = 'none';
+                    img3.style.display = 'none';
+
+                    btn1.addEventListener('click', () => {
+                        btn1.style.display = 'none';
+                        img1.style.display = 'block'
+                    })
+
+                    btn3.addEventListener('click', () => {
+                        btn3.style.display = 'none';
+                        img3.style.display = 'block'
+                    })
+
+                </script>
                 
                 <h2 id="login-btn">Exemple de bouton de connexion</h2>
                 <h3>HTML avec CSS fournis</h3>
@@ -48,6 +83,8 @@
     &lt;img src="https://api.silverdium.fr/img/auth/logo.png"&gt;
     &lt;span&gt;Se connecter avec SilverAuth&lt;/span&gt;
 &lt;/button&gt;</code></pre>
+
+<iframe style="height: 4rem; border: none; overflow: hidden;" src="/btn"></iframe>
 
                 <h3>Fonction de redirection</h3>
 <pre><code class="js">function silverauthPopup() {
@@ -59,7 +96,27 @@
 }</pre></code>
                 
                 <h2 id="callback">Page de callback</h2>
-                <p>La page de callback récupère l'ID de session pour obtenir un token.</p>
+                <p>La page de callback est une page don le seul but est de récupère l'ID de session
+                    <br>dans l'url pour obtenir le token utilisateur puis rediriger vers la page voulu.
+                </p>
+                <h3>Schema de l'url vers laquelle silverauth redirige l'utilisateur</h3>
+                <pre><code>https://votredomaine.com/callback?id=100212940933242270000</code></pre>
+                L'id est un idantifiant temporaire permettant de récupérer le Token 
+                <br>pour récupérer le token en javascript fontend :
+                <pre><code class="js">const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`)</code></pre>
+
+pour récupérer le token en javascript, express backend :
+<pre><code class="js">const id = req.query.id;
+fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`)</code></pre>
+
+Une fois le success de la reqete, un cookie aura été créer avec une durée de vie de 7jours avec le token, 
+<br>a chaque requete, SilverAuth api recupérera automatiquement le token. voici la reponse json de la reqete :
+<pre><code class="json">{
+    "id": 100212940933242270000,
+    "token": "le magnifique token"
+}</code></pre>
 
                 <h2 id="token">Récupération du Token</h2>
                 <p>En backend avec Express :</p>
@@ -101,6 +158,18 @@
         </div>
         
         <footer>&copy; 2025 SilverAuth | SilverCore - Tous droits réservés.</footer>
+
+        <script>
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            });
+        </script>
 
     </body>
 
