@@ -125,7 +125,13 @@ app.get('/doc', (req, res) => {
 app.get('/asset/css/btn', (req, res) => {
     res.sendFile(path.join(__dirname, 'assets/css/docbtn.css'))
 })
-
+app.get('/btn', (req, res) => {
+    res.send(`<link rel="stylesheet" href="/asset/css/btn">
+<button onclick="silverauthPopup()" class="sauth-login-button">
+    <img src="https://api.silverdium.fr/img/auth/logo.png">
+    <span>Se connecter avec SilverAuth</span>
+</button>`)
+})
 app.get('/user/:go', (req, res) => {
 
     const go = req.params.go;

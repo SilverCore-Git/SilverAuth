@@ -1,1 +1,107 @@
-Documentation
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Documentation SilverAuth</title>
+        
+        <!-- Styles et librairies externes -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/atom-one-dark.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+
+        <link rel="stylesheet" href="./style.css">
+
+    </head>
+        
+    <body>
+
+        <header>Documentation API SilverAuth</header>
+        
+        <div class="container">
+            <div class="content">
+
+                <h2 id="intro">Introduction</h2>
+                <p>SilverAuth est un système de gestion de comptes développé par SilverCore, permettant aux utilisateurs de se connecter via "Se connecter avec SilverAuth".</p>
+                
+                <h2 id="apikey">Clé d'API d'authentification</h2>
+                <p>Une clé d'API est requise pour interagir avec SilverAuth. Vous pouvez la créer et la gérer depuis votre <a href="https://auth.silverdium.fr/panel">panel SilverAuth</a>.</p>
+                
+                <h3>Création de la clé d'API</h3>
+                <ol>
+                    <li>Accédez à votre <a href="https://auth.silverdium.fr/panel">panel SilverAuth</a>.</li>
+                    <li>Dans "Mes clés d'API", cliquez sur "Ajouter une clé API".</li>
+                    <li>Entrez les informations de votre organisation.</li>
+                    <li>Configurez les domaines et redirections autorisées.</li>
+                    <li>Cliquez sur "Sauvegarder".</li>
+                </ol>
+                
+                <h2 id="login-btn">Exemple de bouton de connexion</h2>
+                <h3>HTML avec CSS fournis</h3>
+    <pre><code class="html">    &lt;!-- SilverAuth login btn --&gt;
+&lt;link rel="stylesheet" href="https://auth.silverdium.fr/asset/css/btn"&gt;
+&lt;button onclick="silverauthPopup()" class="sauth-login-button"&gt;
+    &lt;img src="https://api.silverdium.fr/img/auth/logo.png"&gt;
+    &lt;span&gt;Se connecter avec SilverAuth&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+
+                <h3>Fonction de redirection</h3>
+<pre><code class="js">function silverauthPopup() {
+    const apikey = "Votre clé d'api";
+    const callback = "https://votreDomaine.com/callback";
+    setTimeout(() => {
+        window.location.href = `https://auth.silverdium.fr/popup/auth?action=login&redirect=${callback}&key=${apikey}`;
+    }, 200);
+}</pre></code>
+                
+                <h2 id="callback">Page de callback</h2>
+                <p>La page de callback récupère l'ID de session pour obtenir un token.</p>
+
+                <h2 id="token">Récupération du Token</h2>
+                <p>En backend avec Express :</p>
+    <pre><code class="javascript">const id = req.query.id;
+    fetch(`https://auth.silverdium.fr/auth/verify?id=${id}`)
+        .then(response => response.json())
+        .then(data => console.log(data));</code></pre>
+                
+                <h2 id="userdata">Récupération des informations utilisateur</h2>
+                <p>Une fois l’utilisateur connecté, vous pourrez récupérer ses informations via l’endpoint : <code>https://auth.silverdium.fr/auth/verify</code></p>
+                
+    <pre><code class="json">{
+        "valid": true,
+        "token": "token",
+        "data": {
+            "usr_info": {
+                "userId": "id",
+                "name": "nom",
+                "email": "email",
+                "account_grade": "USER",
+                "dataplus": {
+                    "UUID": "UUID unique",
+                    "banned": false
+                }
+            }
+        }
+    }</code></pre>
+            </div>
+            
+            <nav class="toc">
+                <h3>Table des matières</h3>
+                <a href="#intro">Introduction</a>
+                <a href="#apikey">Clé d'API</a>
+                <a href="#login-btn">Bouton connexion</a>
+                <a href="#callback">Page Callback</a>
+                <a href="#token">Récupération Token</a>
+                <a href="#userdata">Infos Utilisateur</a>
+            </nav>
+        </div>
+        
+        <footer>&copy; 2025 SilverAuth | SilverCore - Tous droits réservés.</footer>
+
+    </body>
+
+</html>
