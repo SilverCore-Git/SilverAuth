@@ -1,6 +1,6 @@
 {
 
-    "hostname": "test.silverdium.fr",
+    "hostname": "localhost",
 
     "SSLkeyPath": "/etc/letsencrypt/live/test.silverdium.fr/privkey.pem",
     "SSLcertPath": "/etc/letsencrypt/live/test.silverdium.fr/fullchain.pem"

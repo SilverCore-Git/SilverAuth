@@ -25,7 +25,7 @@ function connect(mail, passwd, name) {
 
             const key = resp.key
 
-            fetch("https://api4.ipify.org?format=json")
+            fetch("/getipV4")
             .then(response => response.json())
             .then(data => {
 

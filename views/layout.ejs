@@ -30,6 +30,10 @@
                 .then(res => res.json())
                 .then(user => {
 
+                    if (!user.valid) {
+                        window.location.href = '/auth/view/login?redirect=/panel/';
+                    }
+
                     if (user.data.usr_info.account_grade === 'ADMIN') {
                         adminItems.forEach(item => item.style.display = "block");
                     } else {

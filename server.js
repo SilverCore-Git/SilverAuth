@@ -13,6 +13,7 @@ const express = require("express");
 const http = require("http");
 const fs = require("fs");
 const cookieParser = require('cookie-parser');
+const axios = require('axios');
 const config = require('./config.json');
 
 // SSL key & cert path
@@ -141,6 +142,19 @@ app.get('/user/:go', (req, res) => {
 
 });
 
+app.get('/getipV4', async (req, res) => {
+    try {
+        // Utiliser axios pour obtenir l'IP publique via ipify
+        const response = await axios.get("https://api4.ipify.org?format=json");
+        const userIp = response.data.ip;  // Récupérer l'IP depuis la réponse
+
+        // Envoyer l'IP de l'utilisateur dans la réponse
+        res.json({ ip: userIp });
+    } catch (error) {
+        // En cas d'erreur, renvoyer un message d'erreur
+        res.status(500).json({ error: "Impossible de récupérer l'adresse IP" });
+    }
+});
 
 // const key = require('./src/database/apikey.js');
 // async function d() {
