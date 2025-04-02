@@ -25,48 +25,57 @@ function connect(mail, passwd, name) {
 
             const key = resp.key
 
-            fetch(`/auth/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ mail, passwd, name, key }),
-            })
-            .then(res => res.json())
-            .then(resp => {
+            fetch("https://api4.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => {
 
-                if (resp.error) {
+                const ip = data.ip;
 
-                    try {
-                        salert('SilverAuth', resp.resp.message, 'error');
+                fetch(`/auth/register`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ mail, passwd, name, key, ip }),
+                })
+                .then(res => res.json())
+                .then(resp => {
+    
+                    if (resp.error) {
+    
+                        try {
+                            salert('SilverAuth', resp.resp.message, 'error');
+                        }
+                        catch (err) {
+                            salert('SilverAuth', 'Une erreur est survenue', 'error');
+                        }
+                        console.error(resp)
+                        loader.style.display = 'none';
+                        form.style.display= 'flex';
+                        return
+    
                     }
-                    catch (err) {
-                        salert('SilverAuth', 'Une erreur est survenue', 'error');
-                    }
-                    console.error(resp)
-                    loader.style.display = 'none';
-                    form.style.display= 'flex';
-                    return
-
-                }
-
-                else if (resp.statu === 'success') {
-
-                    setTimeout(() => {
-
-                        salert('SilverAuth', resp.message, 'success');
-                        
+    
+                    else if (resp.statu === 'success') {
+    
                         setTimeout(() => {
+    
+                            salert('SilverAuth', resp.message, 'success');
                             
-                            window.location.href = `/auth/view/login`;
-
-                        }, 300);
-
-                    }, 500);
-
-                }
-
-            });
+                            setTimeout(() => {
+                                
+                                window.location.href = `/auth/view/login`;
+    
+                            }, 300);
+    
+                        }, 500);
+    
+                    }
+    
+                });
+                
+            })
+            .catch(error => console.error("Erreur lors de la récupération de l'IP :", error));
 
         });
 

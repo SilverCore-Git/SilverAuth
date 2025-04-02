@@ -33,12 +33,11 @@ router.get('/', (req, res) => {
 
 router.post('/register', async (req, res) => { 
 
-    const { mail, passwd, name, key } = req.body;
-    const ip = req.ip || req.connection.remoteAddress;
+    const { mail, passwd, name, key, ip } = req.body;
 
     if (key !== process.env.REGISTER_KEY) {
         res.status(403).json( { error: true, message: "La clé n'est pas valide !" } );
-        return;
+        return; 
     };
 
     try {
