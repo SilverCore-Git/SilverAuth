@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>Documentation SilverAuth</title>
+        <title>Documentation SilverAuth API</title>
         
         <!-- Styles et librairies externes -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -102,48 +102,64 @@
                 <h3>Schema de l'url vers laquelle silverauth redirige l'utilisateur</h3>
                 <pre><code>https://votredomaine.com/callback?id=100212940933242270000</code></pre>
                 L'id est un idantifiant temporaire permettant de récupérer le Token 
-                <br>pour récupérer le token en javascript fontend :
+                <br>pour récupérer le token en javascript frontend :
                 <pre><code class="js">const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
-fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`)</code></pre>
+fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`);</code></pre>
 
 pour récupérer le token en javascript, express backend :
 <pre><code class="js">const id = req.query.id;
-fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`)</code></pre>
+fetch(`https://auth.silverdium.fr/popup/getaccount/${id}`);</code></pre>
 
 Une fois le success de la reqete, un cookie aura été créer avec une durée de vie de 7jours avec le token, 
-<br>a chaque requete, SilverAuth api recupérera automatiquement le token. voici la reponse json de la reqete :
-<pre><code class="json">{
-    "id": 100212940933242270000,
-    "token": "le magnifique token"
-}</code></pre>
+<br>a chaque requete, SilverAuth api recupérera automatiquement le token.
 
-                <h2 id="token">Récupération du Token</h2>
-                <p>En backend avec Express :</p>
+
+                <h2 id="userdata">Récupération des données utilisateur</h2>
+                <p>Une fois l’utilisateur connecté, vous pourrez récupérer ses informations via l’endpoint : 
+                    <code>https://auth.silverdium.fr/auth/verify</code>
+                </p>
+                <h3>Example d'utilisation en javascript frontend :</h3>
     <pre><code class="javascript">const id = req.query.id;
-    fetch(`https://auth.silverdium.fr/auth/verify?id=${id}`)
+    fetch(`https://auth.silverdium.fr/auth/verify`)
         .then(response => response.json())
         .then(data => console.log(data));</code></pre>
-                
-                <h2 id="userdata">Récupération des informations utilisateur</h2>
-                <p>Une fois l’utilisateur connecté, vous pourrez récupérer ses informations via l’endpoint : <code>https://auth.silverdium.fr/auth/verify</code></p>
-                
+        <p>Lors de la requete, le token est automatiquement récupérer dans les cookie.</p>
+        <h3>Example de réponse server :</h3> 
     <pre><code class="json">{
-        "valid": true,
-        "token": "token",
-        "data": {
-            "usr_info": {
-                "userId": "id",
-                "name": "nom",
-                "email": "email",
-                "account_grade": "USER",
-                "dataplus": {
-                    "UUID": "UUID unique",
-                    "banned": false
-                }
+    "valid": true,
+    "token": "user token",
+    "data": {
+        "usr_info": {
+            "userId": 41,
+            "createat": "2025-03-27T15:07:40.000Z",
+            "name": "user",
+            "email": "email@email.com",
+            "account_grade": "USER",
+            "dataplus": {
+                "UUID": "dda813f6-01e5-49d8-82a7-1b406d5ee8a7",
+                "ip": "ip.ip.v4.v4",
+                "url": {
+                    "skin": {
+                        "skin": "auth.silverdium.fr/api/skin/view/skin",
+                        "head": "auth.silverdium.fr/api/skin/view/head"
+                    },
+                    "pp": "auth.silverdium.fr/api/skin/view/pp"
+                },
+                "banned": false
             }
-        }
-    }</code></pre>
+        },
+    }
+}</code></pre>
+
+    <p>
+        Pour récupérer les informations type skin ou photo de profile,
+        <br>utilisez les url donner en rajoutant <code>/nom d'utilisateur</code> Exemple :
+        <pre><code>https://auth.silverdium.fr/api/skin/view/pp/toto</code></pre>
+        Pour récupérer l'image pardefault, il vous suffit de remplacer le pseudo par "default"
+    </p>
+
+
             </div>
             
             <nav class="toc">
@@ -152,7 +168,6 @@ Une fois le success de la reqete, un cookie aura été créer avec une durée de
                 <a href="#apikey">Clé d'API</a>
                 <a href="#login-btn">Bouton connexion</a>
                 <a href="#callback">Page Callback</a>
-                <a href="#token">Récupération Token</a>
                 <a href="#userdata">Infos Utilisateur</a>
             </nav>
         </div>

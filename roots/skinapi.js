@@ -26,8 +26,7 @@ router.get('/view/head/:player', (req, res) => {
     const player = req.params.player;
 
     if (!player) {
-        res.status(404).json( { error: true, message: 'Le joueur n\'est pas défini.' } );
-        return
+        return res.status(200).sendFile( path.join( __dirname, '../data/skinapi/default/head.png' ) );
     }
 
     try {
@@ -68,8 +67,7 @@ router.get('/view/skin/:player', (req, res) => {
     const player = req.params.player;
 
     if (!player) {
-        res.status(404).json( { error: true, message: 'Le joueur n\'est pas défini.' } );
-        return
+        return  res.status(200).sendFile( path.join( __dirname, '../data/skinapi/default/skin.png' ) );
     }
 
 
@@ -112,7 +110,7 @@ router.get('/view/pp/:player', (req, res) => {
     const player = req.params.player;
 
     if (!player) {
-        res.status(404).json( { error: true, message: 'Le joueur n\'est pas défini.' } );
+        res.status(200).sendFile( path.join( __dirname, '../data/pp/default.png' ) );
         return
     }
 

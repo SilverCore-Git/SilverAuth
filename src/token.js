@@ -28,13 +28,6 @@ class token {
                 account_grade: account_grade,
                 dataplus: dataplus,
 
-                pp: `${dataplus.url.pp}/${name}`,
-
-                skin: {
-                    head: `${dataplus.url.skin.head}/${name}`,
-                    head: `${dataplus.url.skin.skin}/${name}`
-                }
-
             }
 
         };
