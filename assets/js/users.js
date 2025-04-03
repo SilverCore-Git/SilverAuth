@@ -160,6 +160,7 @@ document.getElementById('manageUserForm').addEventListener('submit', function (e
 
 // Action pour bannir l'utilisateur
 document.getElementById('banUser').addEventListener('click', function () {
+    return salert('SilverAuth', 'fonction non créer<br><i>(backend non réaliser)</i>', 'error')
     const userId = document.getElementById('userId').value;
     if (confirm("Êtes-vous sûr de vouloir bannir cet utilisateur ?")) {
         fetch(`/panel/users/ban/${userId}`, {

@@ -10,17 +10,17 @@ console.log('Démarrage du serveur...');
 
 // Importation des bibliothèques
 const express = require("express");
-const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const cookieParser = require('cookie-parser');
 const axios = require('axios');
 const config = require('./config.json');
 
 // SSL key & cert path
-// const options = { 
-//     key: fs.readFileSync(config.SSLkeyPath, "utf8"),
-//     cert: fs.readFileSync(config.SSLcertPath, "utf8"),
-// };
+const options = { 
+    key: fs.readFileSync(config.SSLkeyPath, "utf8"),
+    cert: fs.readFileSync(config.SSLcertPath, "utf8"),
+};
 
 
 // importation des roots
@@ -182,6 +182,6 @@ app.use((req, res) => {
 });
 
 const PORT = 8456;
-http.createServer(app).listen(PORT, () => {
+https.createServer(options, app).listen(PORT, () => {
     console.log(`Serveur HTTPS en ligne sur localhost:${PORT}`);
 });
