@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <title>Code Source</title>
+</head>
+<body>
+
+    <pre>
+<code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Example Site&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;Bienvenue sur Example Site&lt;/h1&gt;
+        &lt;button onclick="login()"&gt;Connexion&lt;/button&gt;
+        &lt;button&gt;Inscription&lt;/button&gt;
+        &lt;button onclick="logout()"&gt;Déconnexion&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;br&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;Les informations de ton compte&lt;/h1&gt;
+        &lt;div style="display: flex; justify-content: center; align-items: center; flex-direction: column;"&gt;
+            &lt;div style="display: flex; flex-direction: row; font-size: 1.3rem;"&gt;Statut = &lt;div id="statu"&gt;&lt;/div&gt;&lt;/div&gt;
+            &lt;div style="display: flex; flex-direction: row; font-size: 1.3rem;"&gt;Nom = &lt;div id="name"&gt;&lt;/div&gt;&lt;/div&gt;
+            &lt;div style="display: flex; flex-direction: row; font-size: 1.3rem;"&gt;Email = &lt;div id="email"&gt;&lt;/div&gt;&lt;/div&gt;
+            &lt;div style="display: flex; flex-direction: row; font-size: 1.3rem;"&gt;PP = &lt;img style="width: 5rem; height: 5rem;" id="pp"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        function login() {
+            const key = 'c756222b8d7092daf1e106fb24377c';
+            window.location.href = `/popup/auth?action=login&redirect=https://auth.silverdium.fr/exemple/site/callback&key=${key}`;
+        }
+
+        function logout() {
+            fetch('/auth/logout')
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp) {
+                        data();
+                    }
+                });
+        }
+
+        function data() {
+            fetch('/auth/verify')
+                .then(resp => resp.json())
+                .then(resp => {
+                    if (resp.valid) {
+                        document.getElementById('name').innerText = resp.data.usr_info.name;
+                        document.getElementById('email').innerText = resp.data.usr_info.email;
+                        document.getElementById('pp').src = `http://localhost:8456/api/skin/view/pp/${resp.data.usr_info.name}`;
+                        document.getElementById('statu').innerText = 'Connecté';
+                    } else {
+                        document.getElementById('name').innerText = '';
+                        document.getElementById('pp').src = '';
+                        document.getElementById('email').innerText = '';
+                        document.getElementById('statu').innerText = 'Déconnecté';
+                    }
+                });
+        }
+        data();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</body>
+</html>

@@ -95,10 +95,16 @@ app.use('/dev', roots.dev);
 
 
 
-app.get('/example/site', (req, res) => {
+app.get('/exemple/site', (req, res) => {
+    if (req.query.source === "code") {
+        return res.sendFile(path.join( __dirname, 'public', 'example_site', `index_code.html` ));
+    }
     res.sendFile(path.join( __dirname, 'public', 'example_site', `index.html` ));
 });
-app.get('/example/site/callback', (req, res) => {
+app.get('/exemple/site/callback', (req, res) => {
+    if (req.query.source === "code") {
+        return res.sendFile(path.join( __dirname, 'public', 'example_site', `callback_code.html` ));
+    }
     res.sendFile(path.join( __dirname, 'public', 'example_site', `callback.html` ));
 });
 
