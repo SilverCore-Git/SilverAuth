@@ -61,10 +61,13 @@ function connect(mail, passwd, name) {
                         setTimeout(() => {
     
                             salert('SilverAuth', resp.message, 'success');
+
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const redirect = urlParams.get('redirect');
                             
                             setTimeout(() => {
                                 
-                                window.location.href = `/auth/view/login`;
+                                window.location.href = `/auth/view/login?redirect=${redirect}`;
     
                             }, 300);
     

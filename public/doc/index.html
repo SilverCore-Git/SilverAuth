@@ -7,6 +7,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <title>Documentation SilverAuth API</title>
+
+        <script type="application/ld+json">
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              "name": "Documentation SilverAuth",
+              "description": "Silverauthenticator, un compte pour tout.",
+              "provider": {
+                "@type": "Organization",
+                "name": "SilverAuth",
+                "url": "https://auth.silverdium.fr"
+              }
+            }
+        </script>
         
         <!-- Styles et librairies externes -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -91,6 +105,16 @@
                     })
 
                 </script>
+
+                <h2 id="urls">Requête possible</h2>
+                <p>Formulaire de connection</p>
+                <pre><code class="url">https://auth.silverdium.fr/popup/auth?action=login&redirect=${url de callback}&key=${apikey}</code></pre>
+                <p>Formulaire de création de compte</p>
+                <pre><code class="url">https://auth.silverdium.fr/popup/auth?action=register&redirect=${url de callback}&key=${apikey}</code></pre>
+                <p>Vérification de la connéction</p>
+                <pre><code class="url">https://auth.silverdium.fr/auth/verify</code></pre>
+                <p>Récupération du token via id</p>
+                <pre><code class="url">https://auth.silverdium.fr/popup/getaccount/${id}</code></pre>
                 
                 <h2 id="login-btn">Exemple de bouton de connexion</h2>
                 <h3>HTML avec CSS fournis</h3>
@@ -195,6 +219,7 @@ Une fois la requête réussie, un cookie aura été créé avec une durée de vi
                 <h3>Table des matières</h3>
                 <a href="#intro">Introduction</a>
                 <a href="#apikey">Clé d'API</a>
+                <a href="#urls">Requête</a>
                 <a href="#login-btn">Bouton connexion</a>
                 <a href="#callback">Page Callback</a>
                 <a href="#userdata">Infos Utilisateur</a>

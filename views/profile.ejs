@@ -32,6 +32,21 @@
                 <meta property="og:site_name" content="Profile - SilverAuth - Authantificator">
                 <meta property="og:locale" content="fr_FR">
 
+                <script type="application/ld+json">
+                    {
+                      "@context": "https://schema.org",
+                      "@type": "Service",
+                      "name": "Mon profile SilverAuth",
+                      "description": "Silverauthenticator, un compte pour tout.",
+                      "provider": {
+                        "@type": "Organization",
+                        "name": "SilverAuth",
+                        "url": "https://auth.silverdium.fr"
+                      }
+                    }
+                </script>
+                    
+
                 <script>
                     
                     fetch('/auth/verify').then(res => res.json())
@@ -52,7 +67,7 @@
 
                 </script>
 
-                <title>Document</title>
+                <title>SilverAuth - Profile</title>
 
             </head>
 
