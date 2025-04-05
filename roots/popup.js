@@ -59,12 +59,7 @@ router.get('/auth', async (req, res) => {
             return res.status(400).json({ error: true, message: 'Clé d\'api non valide !' })
         }
 
-        const allowed_domains = client.data.data.allowed_domains;
         const allowed_redirect = client.data.data.redirect_urls;
-
-        if (allowed_domains.includes(req.hostname)) {}
-        else { return res.status(400).json({ error: true, message: 'Nom de domaine non lié a l\'api key !' }) };
-
 
         if (allowed_redirect.includes(redirect)) {}
         else { return res.status(400).json({ error: true, message: 'Url de redirection non lié a l\'api key !' }) }
@@ -155,9 +150,9 @@ router.get('/getaccount/:id', (req, res) => {
     }
 
     res.cookie('silvertoken', data.token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        maxAge: 2 * 24 * 60 * 60 * 1000, 
         sameSite: 'Strict'
     });
 

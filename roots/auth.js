@@ -151,7 +151,7 @@ router.post('/login', async (req, res) => {
 
             res.cookie('silvertoken', resp.token, {
 
-                httpOnly: true,
+                httpOnly: false, // remettre true avant publish
                 secure: true,
                 maxAge: 7 * 24 * 60 * 60 * 1000, 
                 sameSite: 'Strict'
@@ -175,9 +175,8 @@ router.post('/login', async (req, res) => {
 
 
 router.get('/verify', async (req, res) => {
-
-    const token = req.cookies.silvertoken;
-
+ 
+    const token = req.headers['silvertoken'] || req.cookies?.silvertoken;
     
     try {
 
